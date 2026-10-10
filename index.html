@@ -375,7 +375,7 @@ function renderNow(s){
     const c=CPS[s.nextIdx], sg=seg(s.nextIdx), planPace=sg.mv/sg.dist;
     const needed = planPace*(s.lastIdx>=0 ? s.k : 1);
     const last = s.lastIdx>=0 ? CPS[s.lastIdx] : null;
-    const lastNote = last ? (()=>{ const d=s.actual[s.lastIdx]-last.el; return `Last: ${last.name}, ${d<=0?fmtDelta(d)+' ahead':fmtDelta(d)+' behind'}`; })() : 'No check-in yet';
+    const lastNote = last ? (()=>{ const d=s.actual[s.lastIdx]-last.el; return `Checked in ${last.name} at ${ACT[last.id]||'—'} WIB (${d<=0?fmtDelta(d)+' ahead':fmtDelta(d)+' behind'})`; })() : 'No check-in yet';
     nc.innerHTML = `
       <div class="label key">Next aid station</div>
       <div class="name" style="margin-top:6px">${c.name}${c.tag?`<span class="tag">${c.tag}</span>`:''}</div>
@@ -385,7 +385,8 @@ function renderNow(s){
         <div><div class="label">Pace to hold</div><div class="mid tabnum" style="margin-top:6px;color:var(--lime)">${pace(needed)}/km</div><div class="muted tabnum">plan ${pace(planPace)}</div></div>
       </div>
       <label>Check in (WIB)<input type="time" data-id="${c.id}" value="${ACT[c.id]||''}"></label>
-      <p class="note">${lastNote}</p>`;
+      <p class="note">${lastNote}</p>
+      <button class="btn small b-undo" data-tab="log" style="width:100%;margin-top:10px">Edit check-ins in Log</button>`;
   }
   const fc=$('n-finish');
   if(s.projected===null){
