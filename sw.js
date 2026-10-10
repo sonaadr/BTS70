@@ -1,4 +1,4 @@
-const CACHE = 'bts-companion-v19';
+const CACHE = 'bts-companion-v20';
 const FILES = ['./', './index.html', './manifest.json', './icon-180.png', './icon-512.png'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)).then(() => self.skipWaiting()));

@@ -144,6 +144,7 @@ body.night .cp.crit{border-color:#3a1412;background:linear-gradient(160deg,#1a05
 body.night .alert{border-left-color:#ff6a52}
 body.night .alert strong{color:#ff6a52}
 body.night input[type=time]{border-color:#3a1412}
+.lastin{margin-top:16px;padding:12px 14px;border:1px solid var(--line);border-left:3px solid var(--lime);border-radius:12px;background:var(--raise)}
 </style>
 </head><body>
 
@@ -214,7 +215,7 @@ body.night input[type=time]{border-color:#3a1412}
       </label>
     </div>
     <div class="card">
-      <h3 class="disp">Check-ins</h3>
+      <h3 class="disp">CHECK-IN</h3>
       <div id="l-arrivals"></div>
     </div>
     <div class="card">
@@ -375,7 +376,7 @@ function renderNow(s){
     const c=CPS[s.nextIdx], sg=seg(s.nextIdx), planPace=sg.mv/sg.dist;
     const needed = planPace*(s.lastIdx>=0 ? s.k : 1);
     const last = s.lastIdx>=0 ? CPS[s.lastIdx] : null;
-    const lastNote = last ? (()=>{ const d=s.actual[s.lastIdx]-last.el; return `Checked in ${last.name} at ${ACT[last.id]||'—'} WIB (${d<=0?fmtDelta(d)+' ahead':fmtDelta(d)+' behind'})`; })() : 'No check-in yet';
+    const lastNote = last ? (()=>{ const d=s.actual[s.lastIdx]-last.el; return `<div class="lastin"><div class="label key">Last check-in · ${last.name}</div><div class="mid tabnum" style="margin-top:6px">${ACT[last.id]||'—'} <span class="muted" style="font-size:14px">WIB</span></div><div class="muted tabnum">${d<=0?fmtDelta(d)+' ahead':fmtDelta(d)+' behind'} plan</div></div>`; })() : '<p class="note">No check-in yet</p>';
     nc.innerHTML = `
       <div class="label key">Next aid station</div>
       <div class="name" style="margin-top:6px">${c.name}${c.tag?`<span class="tag">${c.tag}</span>`:''}</div>
@@ -385,7 +386,7 @@ function renderNow(s){
         <div><div class="label">Pace to hold</div><div class="mid tabnum" style="margin-top:6px;color:var(--lime)">${pace(needed)}/km</div><div class="muted tabnum">plan ${pace(planPace)}</div></div>
       </div>
       <label>Check in (WIB)<input type="time" data-id="${c.id}" value="${ACT[c.id]||''}"></label>
-      <p class="note">${lastNote}</p>
+      ${lastNote}
       <button class="btn small b-undo" data-tab="log" style="width:100%;margin-top:10px">Edit check-ins in Log</button>`;
   }
   const fc=$('n-finish');
