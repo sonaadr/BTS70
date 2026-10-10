@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="BTS Companion">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#1d6b58">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>BTS 70K Race Companion</title>
+<style>
+:root{
+  --bg:#f5f3ee; --fg:#1c1f23; --muted:#5e656d; --card:#ffffff; --line:#dcd7cc;
+  --accent:#1d6b58; --ok:#2d7a4c; --late:#b4472a; --crit-bg:#fff3c4; --crit-line:#d9a400;
+  --display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif; --body:system-ui,-apple-system,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#111418; --fg:#ebe9e3; --muted:#9aa2aa; --card:#1a1f25; --line:#2d343c;
+    --accent:#63c6a8; --ok:#7fd49c; --late:#ff8a65; --crit-bg:#3a3316; --crit-line:#f2c94c;
+    color-scheme:dark;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.4 var(--body);-webkit-font-smoothing:antialiased;padding-bottom:84px}
+.tabnum{font-variant-numeric:tabular-nums}
+.top{padding:14px 16px 4px;max-width:560px;margin:0 auto}
+.brand{font-family:var(--display);font-weight:700;font-size:26px;text-transform:uppercase;line-height:1}
+.sub{color:var(--muted);font-size:13px;margin-top:4px}
+main{max-width:560px;margin:0 auto}
+.screen{display:none;padding:0 14px 16px}
+.screen.on{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:12px}
+.card h3{font-family:var(--display);font-size:20px;text-transform:uppercase;margin:0 0 8px}
+.label{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+.big{font-family:var(--display);font-weight:700;font-size:52px;line-height:1}
+.mid{font-family:var(--display);font-weight:700;font-size:34px;line-height:1.05}
+.name{font-family:var(--display);font-weight:700;font-size:28px;text-transform:uppercase;line-height:1.05}
+.muted{color:var(--muted);font-size:14px}
+.row{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:12px}
+.row > div{min-width:120px}
+.ok{color:var(--ok)} .late{color:var(--late)} .amber{color:var(--crit-line)}
+.btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.btn{min-height:58px;font:600 16px var(--body);color:var(--fg);background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px;cursor:pointer}
+.btn:active{border-color:var(--accent)}
+.btn.wide{grid-column:1/-1}
+.btn.primary{border-color:var(--accent)}
+.btn.small{min-height:44px;font-size:14px}
+input[type=time],select{font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px;min-width:130px}
+label{display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:12px}
+.alert{border-left:4px solid var(--late);padding:10px 12px;border-radius:10px;background:var(--card);border:1px solid var(--line);margin-top:12px;font-size:14px}
+.pill{display:inline-block;font-weight:700;border-radius:999px;padding:2px 10px;font-size:13px;border:1px solid currentColor}
+.tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border-radius:4px;padding:2px 6px;margin-left:8px;background:var(--crit-line);color:#1c1f23;vertical-align:middle}
+.cp{border:1px solid var(--line);border-radius:14px;background:var(--card);margin-top:10px}
+.cp.crit{background:var(--crit-bg);border-color:var(--crit-line)}
+details summary{list-style:none;cursor:pointer;padding:14px 16px;display:flex;justify-content:space-between;gap:10px;align-items:center}
+details summary::-webkit-details-marker{display:none}
+details[open] summary{border-bottom:1px solid var(--line)}
+.body{padding:12px 16px 16px;font-size:14px}
+.body h4{margin:12px 0 4px;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.body ul{margin:0;padding-left:18px}
+.body li{margin:3px 0}
+.tablewrap{overflow-x:auto;margin-top:10px}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{text-align:left;padding:8px 6px;border-top:1px solid var(--line);vertical-align:top}
+th{color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase}
+td.num,th.num{text-align:right;white-space:nowrap}
+tr.crit td{background:var(--crit-bg)}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.stat{border-top:3px solid var(--accent);padding-top:6px}
+.stat .k{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em}
+.stat .v{font-family:var(--display);font-size:26px;font-weight:700;line-height:1.1}
+.stat .s{color:var(--muted);font-size:12px}
+.tabbar{position:fixed;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(4,1fr);background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+.tabbar button{min-height:58px;border:0;background:none;color:var(--muted);font:600 13px var(--body);text-transform:uppercase;letter-spacing:.04em;cursor:pointer}
+.tabbar button.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent)}
+.rules h4{margin:16px 0 6px;font-family:var(--display);font-size:20px;text-transform:uppercase}
+.rules ul{margin:0;padding-left:18px}
+.rules li{margin:5px 0}
+.note{color:var(--muted);font-size:13px;margin:8px 0 0}
+@media (min-width:700px){ .big{font-size:64px} .mid{font-size:40px} }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="brand">BTS 70K Companion</div>
+  <div class="sub">Nayla · 7 Nov 2026 · Bromo Tengger Semeru · WIB · Target 15 h · Cut-off 18 h</div>
+</div>
+
+<main>
+  <!-- NOW -->
+  <section id="scr-now" class="screen on">
+    <div class="card">
+      <div class="label">Elapsed</div>
+      <div class="big tabnum" id="n-elapsed">—</div>
+      <div class="muted tabnum" id="n-clock"></div>
+    </div>
+    <div class="card" id="n-next"></div>
+    <div class="card" id="n-finish"></div>
+    <div class="card" id="n-due"></div>
+    <div class="btns">
+      <button class="btn" data-fuel="gel">+ Gel</button>
+      <button class="btn" data-fuel="elec">+ Electrolyte</button>
+      <button class="btn" data-fuel="salt">+ Salt cap</button>
+      <button class="btn" data-stop="5">+ Stop 5 min</button>
+      <button class="btn wide" data-stop="gi">+ GI episode (5 min)</button>
+    </div>
+    <div id="n-alerts"></div>
+  </section>
+
+  <!-- PLAN -->
+  <section id="scr-plan" class="screen">
+    <div class="card">
+      <h3>Checkpoints</h3>
+      <div id="p-list"></div>
+    </div>
+    <div class="card">
+      <details>
+        <summary><span class="name" style="font-size:20px">Pace bands</span><span class="muted">tap</span></summary>
+        <div class="body">
+          <label style="margin-top:0">Target
+            <select id="pace-base">
+              <option value="1">15 h plan</option>
+              <option value="1.189">Calibrated: 17.8 h</option>
+            </select>
+          </label>
+          <div class="tablewrap"><table id="pace-table"></table></div>
+          <p class="note">Band is ±5% around the average. Faster than the lower limit: slow down. On descents, follow the effort cue, not pace.</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- LOG -->
+  <section id="scr-log" class="screen">
+    <div class="card">
+      <label style="margin-top:0">Race start (WIB)
+        <input type="time" id="start" value="01:00">
+      </label>
+    </div>
+    <div class="card">
+      <h3>Arrival times</h3>
+      <div id="l-arrivals"></div>
+    </div>
+    <div class="card">
+      <h3>Fuel</h3>
+      <div class="stats" id="l-fuel"></div>
+      <div class="btns">
+        <button class="btn small" data-fuel="gel">+ Gel</button>
+        <button class="btn small" data-fuel="elec">+ Electrolyte</button>
+        <button class="btn small" data-fuel="food">+ Solid food</button>
+        <button class="btn small" data-fuel="salt">+ Salt cap</button>
+        <button class="btn small wide" data-undo="fuel">Undo last fuel entry</button>
+      </div>
+      <p class="note" id="l-fuel-note"></p>
+    </div>
+    <div class="card">
+      <h3>Stops</h3>
+      <div class="stats" id="l-stops"></div>
+      <div class="btns">
+        <button class="btn small" data-stop="5">+ Stop 5</button>
+        <button class="btn small" data-stop="10">+ Stop 10</button>
+        <button class="btn small" data-stop="20">+ Stop 20</button>
+        <button class="btn small" data-stop="gi">+ GI episode</button>
+        <button class="btn small wide" data-undo="stop">Undo last stop</button>
+      </div>
+    </div>
+    <div class="card">
+      <button class="btn small" id="reset" style="width:100%">Clear all arrival times</button>
+      <p class="note">Everything here is saved in this browser only. Clear test entries before 7 Nov.</p>
+    </div>
+  </section>
+
+  <!-- RULES -->
+  <section id="scr-rules" class="screen rules">
+    <div class="card">
+      <h3>Go / no-go rules</h3>
+      <p class="note">Nayla runs without a crew, so nobody can bring food or pick her up mid-course. Medical is only at Start, WS6 Jemplang, and Finish. The stretch from WS6 to Finish is 25.5 km with no medical point. Thresholds are proposals to confirm with her coach and the event medical team.</p>
+      <h4>Legs</h4>
+      <ul><li>Quad pain 7/10 or higher: walk the next descent and cut pace by 10%.</li>
+          <li>Sharp or one-sided pain, or limping: stop at the next water station and ask for medical.</li></ul>
+      <h4>Stomach and fuel</h4>
+      <ul><li>Nausea once: switch to water and electrolyte for 30 minutes, then resume gel.</li>
+          <li>Vomiting, or nausea twice in a row: no gel until it settles; tell medical at the next point.</li>
+          <li>Diarrhea or GI episode: tap "GI episode" so it is logged. Two or more in one segment: pause gel, use water and electrolyte only, and tell medical at the next point. (Proposal, confirm with coach and medical.)</li>
+          <li>Cannot keep any fluid down for 60 minutes: stop and seek medical help.</li></ul>
+      <h4>Heat and cold</h4>
+      <ul><li>Dizziness, confusion, or cramps with heat signs: stop in shade, cool down, and get medical now.</li>
+          <li>Shivering at night: add a layer and eat; if shivering continues or speech slurs, get medical now.</li></ul>
+      <h4>Mind</h4>
+      <ul><li>Wanting to quit: run the 10-minute rule first (eat, drink, walk 5 minutes), then decide.</li>
+          <li>Behind plan by more than 30 minutes at any checkpoint: re-pace, cut stops to the minimum, and do not chase with surges.</li></ul>
+      <h4>Clock and stop budget</h4>
+      <ul><li>Projected finish after 18:45 WIB: stop and decide whether to continue. Do not push through a cut-off risk.</li>
+          <li>Planned stops are 57 min. If moving pace matches BTR 2026, a 15 h finish allows about 2 h 14 min of total stops. Log every unplanned stop.</li></ul>
+    </div>
+  </section>
+</main>
+
+<nav class="tabbar">
+  <button class="on" data-tab="now">Now</button>
+  <button data-tab="plan">Plan</button>
+  <button data-tab="log">Log</button>
+  <button data-tab="rules">Rules</button>
+</nav>
+
+<script>
+const CUTOFF = 18 * 60;
+const TARGET = 15 * 60;
+const CPS = [
+  { id:'ws1', name:'WS1 B29', note:'Water only', km:5.5, el:97, stop:2, dist:'5.5 km', elev:'+645 m / −380 m', pace:'~17:38/km', crit:false,
+    fuel:['Gel every 25 min (~100 kcal)','Electrolyte every 30 min'],
+    grab:['Refill water and electrolyte','Push first 5.5 km to reach B29 before the traffic jam','Physical: breathing, calves, stomach'] },
+  { id:'ws2', name:'WS2 Ranu Pane 1', km:16.5, el:232, stop:15, dist:'11.0 km', elev:'+479 m / −871 m', pace:'~12:05/km', crit:false,
+    fuel:['Gel every 25 min','Eat until full: big meal (~400 kcal)','No gel-driven surges on the long descent'],
+    grab:['Eat until full','Physical: feet, blisters, quads, body temperature (cold and wet at night)','Morale: check mood before the next climb'] },
+  { id:'ws3', name:'WS3 Ranu Kumbolo', km:25.5, el:362, stop:5, dist:'9.0 km', elev:'+606 m / −392 m', pace:'~12:46/km', crit:false,
+    fuel:['Gel every 25–30 min','Electrolyte every 30 min','Light items only (~100 kcal)'],
+    grab:['Skip pop mie and heavy food; do not linger','Steady rhythm on the long climb, no sprint','Physical: quads before the steep section, nausea check','Note: short out-and-back spur, about 1 km'] },
+  { id:'ws4', name:'WS4 Ranu Pane 2', km:36, el:504, stop:10, dist:'10.5 km', elev:'+606 m / −809 m', pace:'~13:03/km', crit:true, tag:'Steepest descent',
+    fuel:['Solid snack before the descent','Gel and electrolyte every 30 min','No gel-boost sprint'],
+    grab:['Eat solid food','Physical: quad check (tired vs sharp pain), heat signs (dizziness, nausea)','Morale: "Hardest descent is done"'] },
+  { id:'ws6', name:'WS6 Jemplang', km:44.5, el:621, stop:15, dist:'8.5 km', elev:'+566 m / −351 m', pace:'~12:35/km', crit:true, tag:'Mental wall',
+    fuel:['Heavy meal (~400 kcal, menu TBC)','Gel and electrolyte every 30 min','Energy bar at km 41'],
+    grab:['Heavy meal: smaller portion first; finish before leaving if nausea allows','Medical and support point on the poster; hand icon is "support"','Carry water for the 12.5 km gap','Morale: name the mental-wall tactic that worked'] },
+  { id:'ws14', name:'WS14 Bromo Sand', km:57, el:758, stop:10, dist:'12.5 km', elev:'+367 m / −538 m', pace:'~9:45/km', crit:false,
+    fuel:['Eat a lot: last water station','Gel and electrolyte every 30 min'],
+    grab:['Eat a lot here; nothing after','Refill water and electrolyte for the final 13 km','Note: short out-and-back spur, about 0.6 km'] },
+  { id:'fin', name:'Finish', km:70, el:900, stop:0, dist:'13.0 km (sand)', elev:'+497 m / −471 m', pace:'~10:09/km', crit:false,
+    fuel:['Gel every 30–40 min','Final solid food if tolerated','Electrolyte every 30 min'],
+    grab:['Two uphills after Bromo: hike steadily, do not spike','Sand section: expect slow running','Morale: mini-goal every 2 km'] },
+];
+const SEG_INFO = [
+  { cue:'Steady climb. RPE 5–6. Walk the steepest 100 m if needed.', gain:645, loss:380 },
+  { cue:'Long descent. RPE 4–5. No gel-driven surges.', gain:479, loss:871 },
+  { cue:'Long climb after Ranu Kumbolo. RPE 5–6. One steady rhythm, no sprint.', gain:606, loss:392 },
+  { cue:'STEEPEST DESCENT (km 32–39). RPE 5 or lower. Never faster than average; check quads at the bottom.', gain:606, loss:809, crit:true },
+  { cue:'Rolling terrain and the mental wall. RPE 5. Hold the band even when the mind asks for more.', gain:566, loss:351, crit:true },
+  { cue:'Downhill toward Bromo: light jog, RPE 4–5.', gain:367, loss:538 },
+  { cue:'Two uphills and sand. RPE 5–6. Hike the climbs, run only the firm sand.', gain:497, loss:471 },
+];
+const PLAN_KCAL = [240,733,388,493,668,605,530];
+const KCAL = { gel:100, elec:0, food:200, salt:0 };
+
+function load(key, fb){ try { const v = JSON.parse(localStorage.getItem(key)); return v ?? fb; } catch(e) { return fb; } }
+function save(key, val){ try { localStorage.setItem(key, JSON.stringify(val)); } catch(e) {} }
+const KEY = 'bts70k-actuals', FKEY = 'bts70k-fuel', SKEY = 'bts70k-stops';
+const ACT = load(KEY, {});
+let FUEL = load(FKEY, []);
+let STOPS = load(SKEY, []);
+
+const $ = id => document.getElementById(id);
+const pad = n => String(n).padStart(2,'0');
+function startMin(){ const v=$('start').value||'01:00'; const [h,m]=v.split(':').map(Number); return h*60+m; }
+function clock(elMin, base){ const t=((base+elMin)%1440+1440)%1440; return pad(Math.floor(t/60))+':'+pad(t%60); }
+function parseActual(s, base){ if(!s) return null; const [h,m]=s.split(':').map(Number); let t=h*60+m; if(t<base) t+=1440; return t-base; }
+function fmtDelta(d){ const a=Math.abs(Math.round(d)); const hh=Math.floor(a/60), mm=a%60; return (hh?hh+'h ':'')+mm+'m'; }
+function hm(mins){ const a=Math.max(0,Math.round(mins)); return Math.floor(a/60)+':'+pad(a%60); }
+function pace(x){ let m=Math.floor(x), s=Math.round((x-m)*60); if(s===60){ m++; s=0; } return m+':'+pad(s); }
+function nowElapsed(base){ const d=new Date(); const w=new Date(d.toLocaleString('en-US',{timeZone:'Asia/Jakarta'})); let t=w.getHours()*60+w.getMinutes(); if(t<base) t+=1440; return t-base; }
+function isRaceDay(){ return new Date().toLocaleDateString('en-CA',{timeZone:'Asia/Jakarta'})==='2026-11-07'; }
+function stopsAfter(elMin){ return STOPS.filter(s=>s.el>=elMin).reduce((a,s)=>a+s.min,0); }
+function seg(j){ const prevKm = j>0?CPS[j-1].km:0; const prevEl = j>0?CPS[j-1].el+CPS[j-1].stop:0; return { mv: CPS[j].el-prevEl, dist: CPS[j].km-prevKm }; }
+function showTab(name){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('on', s.id==='scr-'+name));
+  document.querySelectorAll('.tabbar button').forEach(b=>b.classList.toggle('on', b.dataset.tab===name));
+  window.scrollTo(0,0);
+}
+
+function state(){
+  const base=startMin();
+  const actual=CPS.map(c=>parseActual(ACT[c.id],base));
+  let lastIdx=-1; actual.forEach((a,i)=>{ if(a!==null) lastIdx=i; });
+  const nextIdx=actual.findIndex(a=>a===null);
+  let k=1, depart=null, stopsRem=0, mvRem=0, moveBudget=0, planFromHere=null, verdict='', cls='ok';
+  if(lastIdx>=0 && lastIdx<CPS.length-1){
+    depart = actual[lastIdx]+CPS[lastIdx].stop;
+    for(let j=lastIdx+1;j<CPS.length;j++){ stopsRem+=CPS[j].stop; mvRem+=seg(j).mv; }
+    moveBudget = (TARGET-depart)-stopsRem;
+    k = moveBudget/mvRem;
+    planFromHere = depart+stopsRem+mvRem;
+    if(k>=1){ verdict='On or ahead of plan. Hold planned pace.'; cls='ok'; }
+    else if(k>=0.95){ verdict='Slightly behind. Run the needed pace and keep stops to the minimum.'; cls='late'; }
+    else { verdict='Far behind for 15 h. Do not chase with surges; aim to finish before 18:00.'; cls='late'; }
+  }
+  const projected = lastIdx>=0 ? actual[lastIdx]+(900-CPS[lastIdx].el)+stopsAfter(actual[lastIdx]) : null;
+  const plannedKcal = lastIdx>=0 ? PLAN_KCAL.slice(0,lastIdx+1).reduce((a,b)=>a+b,0) : null;
+  return {base,actual,lastIdx,nextIdx,k,depart,stopsRem,mvRem,moveBudget,planFromHere,verdict,cls,projected,plannedKcal};
+}
+
+function lastOf(list, type){ const f=list.filter(x=>x.type===type); return f.length?f[f.length-1].el:null; }
+
+function renderNow(s){
+  const base=s.base;
+  // Next checkpoint card
+  const nc = $('n-next');
+  if(s.nextIdx<0){
+    nc.innerHTML = '<div class="label">Checkpoints</div><div class="name">All logged</div><p class="muted">Finish reached. Check the Log tab for totals.</p>';
+  } else {
+    const c=CPS[s.nextIdx], sg=seg(s.nextIdx), planPace=sg.mv/sg.dist;
+    const needed = planPace*(s.lastIdx>=0 ? s.k : 1);
+    const last = s.lastIdx>=0 ? CPS[s.lastIdx] : null;
+    const lastNote = last ? (()=>{ const d=s.actual[s.lastIdx]-last.el; return `Last: ${last.name}, ${d<=0?fmtDelta(d)+' ahead':fmtDelta(d)+' behind'}`; })() : 'No arrival logged yet';
+    nc.innerHTML = `
+      <div class="label">Next checkpoint</div>
+      <div class="name">${c.name}${c.tag?`<span class="tag">${c.tag}</span>`:''}</div>
+      <div class="muted">km ${c.km} · ${c.dist} · ${c.elev}</div>
+      <div class="row">
+        <div><div class="label">Plan clock</div><div class="mid tabnum">${clock(c.el,base)}</div></div>
+        <div><div class="label">Pace needed</div><div class="mid tabnum">${pace(needed)}/km</div><div class="muted tabnum">plan ${pace(planPace)}</div></div>
+      </div>
+      <label>Log arrival (WIB)<input type="time" data-id="${c.id}" value="${ACT[c.id]||''}"></label>
+      <p class="note">${lastNote}</p>`;
+  }
+  // Finish card
+  const fc=$('n-finish');
+  if(s.projected===null){
+    fc.innerHTML = '<div class="label">Projected finish</div><div class="mid">—</div><p class="muted">Log the first arrival to see the projection.</p>';
+  } else {
+    const p=s.projected;
+    const tier = p<=TARGET ? ['ok','On target (15 h or better)']
+      : p<=960 ? ['amber','Still strong, 15–16 h. Hold pace bands, no surges.']
+      : p<=1125 ? ['late','Cut-off margin shrinking. Apply go/no-go rules at each checkpoint.']
+      : ['late','Past 18:45 projected. Stop and decide with the rules now.'];
+    const margin = p<=CUTOFF ? fmtDelta(CUTOFF-p)+' before cut-off' : 'Over cut-off';
+    fc.innerHTML = `
+      <div class="label">Projected finish</div>
+      <div class="big tabnum ${tier[0]}">${clock(p,base)}</div>
+      <p class="${tier[0]}" style="margin:6px 0 0;font-weight:600">${tier[1]}</p>
+      <div class="row"><div><div class="label">Cut-off margin</div><div class="mid tabnum ${p<=CUTOFF?'ok':'late'}">${margin}</div></div></div>
+      ${s.verdict?`<p class="${s.cls}" style="font-weight:600;margin:10px 0 0">${s.verdict}</p>`:''}`;
+  }
+  // Due card
+  const gl=lastOf(FUEL,'gel'), el=lastOf(FUEL,'elec');
+  const cur = nowElapsed(base);
+  const gelDue = gl===null ? 'now' : clock(gl+25, base);
+  const elecDue = el===null ? 'now' : clock(el+30, base);
+  $('n-due').innerHTML = `
+    <div class="row" style="margin-top:0">
+      <div><div class="label">Next gel</div><div class="mid tabnum">${gelDue}</div><div class="muted">every 25 min</div></div>
+      <div><div class="label">Next electrolyte</div><div class="mid tabnum">${elecDue}</div><div class="muted">every 30 min</div></div>
+    </div>`;
+  // Alerts
+  const alerts=[];
+  if(s.projected!==null && s.projected>CUTOFF) alerts.push('<strong class="late">Cut-off risk.</strong> Projected finish is after 19:00 WIB at current pace.');
+  const unplanned = STOPS.reduce((a,x)=>a+x.min,0);
+  if(unplanned>30) alerts.push(`<strong class="late">Unplanned stops ${unplanned} min.</strong> The 15 h target now needs faster moving. Keep stops to the minimum.`);
+  const intake = FUEL.reduce((a,f)=>a+(KCAL[f.type]||0),0);
+  if(s.plannedKcal!==null && intake < s.plannedKcal-100) alerts.push(`<strong class="late">Behind on intake.</strong> Logged ${intake} kcal, plan ${s.plannedKcal} kcal.`);
+  if(!isRaceDay()) alerts.push('<strong class="late">Not race day (7 Nov 2026, WIB).</strong> Entries here are tests. Clear them before the race.');
+  $('n-alerts').innerHTML = alerts.map(a=>`<div class="alert">${a}</div>`).join('');
+}
+
+function renderPlan(s){
+  $('p-list').innerHTML = CPS.map((c,i)=>{
+    const a=s.actual[i];
+    let status = '<span class="muted">Not logged</span>';
+    if(a!==null){ const d=a-c.el; status = d<=0 ? `<span class="pill ok">${fmtDelta(d)} ahead</span>` : `<span class="pill late">${fmtDelta(d)} behind</span>`; }
+    return `
+    <details class="cp ${c.crit?'crit':''}">
+      <summary>
+        <div>
+          <div class="name" style="font-size:22px">${c.name}${c.tag?`<span class="tag">${c.tag}</span>`:''}</div>
+          <div class="muted">km ${c.km} · ${c.dist}</div>
+        </div>
+        <div style="text-align:right">
+          <div class="mid tabnum">${clock(c.el,s.base)}</div>
+          <div>${status}</div>
+        </div>
+      </summary>
+      <div class="body">
+        <div class="muted">${c.note?c.note+' · ':''}${c.elev} · ${c.pace} · stop ${c.stop} min</div>
+        <h4>Fueling during segment</h4>
+        <ul>${c.fuel.map(f=>`<li>${f}</li>`).join('')}</ul>
+        <h4>Grab &amp; do at water station</h4>
+        <ul>${c.grab.map(g=>`<li>${g}</li>`).join('')}</ul>
+      </div>
+    </details>`;
+  }).join('');
+  // Pace bands
+  const f=+$('pace-base').value;
+  const rows = CPS.map((c,j)=>{
+    const sg=seg(j), avg=(sg.mv/sg.dist)*f, info=SEG_INFO[j];
+    return `<tr${info.crit?' class="crit"':''}>
+      <td>${c.name}</td>
+      <td class="num tabnum">${sg.dist.toFixed(1)} km</td>
+      <td class="num tabnum"><strong>${pace(avg)}</strong></td>
+      <td class="num tabnum">${pace(avg*0.95)}–${pace(avg*1.05)}</td>
+      <td>${info.cue}</td></tr>`;
+  }).join('');
+  $('pace-table').innerHTML = `<thead><tr><th>Segment to</th><th class="num">Dist</th><th class="num">Avg</th><th class="num">Band</th><th>Effort cue</th></tr></thead><tbody>${rows}</tbody>`;
+}
+
+function renderLog(s){
+  $('l-arrivals').innerHTML = CPS.map((c,i)=>{
+    const a=s.actual[i];
+    let status = '<span class="muted">Not logged</span>';
+    if(a!==null){ const d=a-c.el; status = d<=0 ? `<span class="pill ok">${fmtDelta(d)} ahead</span>` : `<span class="pill late">${fmtDelta(d)} behind</span>`; }
+    return `<div class="row" style="align-items:center;margin-top:10px">
+      <div style="flex:1;min-width:140px"><div class="name" style="font-size:20px">${c.name}</div><div class="muted">km ${c.km} · plan ${clock(c.el,s.base)}</div></div>
+      <div><input type="time" data-id="${c.id}" value="${ACT[c.id]||''}" aria-label="Actual arrival ${c.name}"><div style="margin-top:4px">${status}</div></div>
+    </div>`;
+  }).join('');
+  const logged = FUEL.reduce((a,f)=>a+(KCAL[f.type]||0),0);
+  const cnt = t => FUEL.filter(f=>f.type===t).length;
+  $('l-fuel').innerHTML = [
+    `<div class="stat"><div class="k">Logged intake</div><div class="v tabnum">${logged} kcal</div><div class="s">${cnt('gel')} gels · ${cnt('elec')} electrolyte · ${cnt('salt')} salt caps</div></div>`,
+    `<div class="stat"><div class="k">Plan at last checkpoint</div><div class="v tabnum">${s.plannedKcal===null?'—':s.plannedKcal+' kcal'}</div><div class="s">${s.plannedKcal===null?'Log a checkpoint first':'Difference '+(logged-s.plannedKcal>=0?'+':'')+(logged-s.plannedKcal)+' kcal'}</div></div>`
+  ].join('');
+  $('l-fuel-note').textContent = 'Carry from the start: about 21 gels (plan 2,100 kcal), about 28 electrolyte doses, and 2 solid snacks for the 12.5 km gap (WS6 to WS14) and the final 13 km.';
+  const unplanned = STOPS.reduce((a,x)=>a+x.min,0), gi = STOPS.filter(x=>x.gi).length;
+  const plannedLeft = s.lastIdx>=0 ? CPS.slice(s.lastIdx+1).reduce((a,c)=>a+c.stop,0) : CPS.reduce((a,c)=>a+c.stop,0);
+  $('l-stops').innerHTML = [
+    `<div class="stat"><div class="k">Unplanned stops</div><div class="v tabnum ${unplanned>30?'late':'ok'}">${unplanned} min</div><div class="s">${STOPS.length} logged</div></div>`,
+    `<div class="stat"><div class="k">GI episodes</div><div class="v tabnum ${gi?'late':''}">${gi}</div><div class="s">See stomach rules</div></div>`,
+    `<div class="stat"><div class="k">Planned stops left</div><div class="v tabnum">${plannedLeft} min</div><div class="s">From the plan</div></div>`,
+    `<div class="stat"><div class="k">Stop budget for 15 h</div><div class="v tabnum">134 min</div><div class="s">If moving pace matches BTR 2026 (estimate)</div></div>`
+  ].join('');
+}
+
+function renderAll(){
+  const s=state();
+  renderNow(s); renderPlan(s); renderLog(s);
+}
+function tickClock(){
+  const base=startMin(), el=nowElapsed(base);
+  $('n-elapsed').textContent = el<0 ? 'Not started' : hm(el)+' h';
+  $('n-clock').textContent = el<0 ? 'Race starts at '+$('start').value+' WIB' : 'Clock '+clock(el,base)+' WIB';
+}
+
+function logFuel(type){ FUEL.push({type, kcal:KCAL[type]||0, el:nowElapsed(startMin())}); save(FKEY,FUEL); renderAll(); tickClock(); }
+function logStop(min, gi){ STOPS.push({min, gi:!!gi, el:nowElapsed(startMin())}); save(SKEY,STOPS); renderAll(); tickClock(); }
+
+document.addEventListener('click', e=>{
+  const b=e.target.closest('[data-tab],[data-fuel],[data-stop],[data-undo],#reset');
+  if(!b) return;
+  if(b.dataset.tab){ showTab(b.dataset.tab); return; }
+  if(b.dataset.fuel){ logFuel(b.dataset.fuel); return; }
+  if(b.dataset.stop){ const gi=b.dataset.stop==='gi'; logStop(gi?5:+b.dataset.stop, gi); return; }
+  if(b.dataset.undo==='fuel'){ FUEL.pop(); save(FKEY,FUEL); renderAll(); return; }
+  if(b.dataset.undo==='stop'){ STOPS.pop(); save(SKEY,STOPS); renderAll(); return; }
+  if(b.id==='reset'){ Object.keys(ACT).forEach(k=>delete ACT[k]); save(KEY,ACT); renderAll(); }
+});
+document.addEventListener('change', e=>{
+  const t=e.target;
+  if(t.matches('input[type=time][data-id]')){
+    if(t.value) ACT[t.dataset.id]=t.value; else delete ACT[t.dataset.id];
+    save(KEY,ACT); renderAll(); tickClock();
+  } else if(t.id==='start' || t.id==='pace-base'){
+    renderAll(); tickClock();
+  }
+});
+
+renderAll(); tickClock();
+setInterval(tickClock, 30000);
+</script>
+
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js");}</script>
+</body>
+</html>
