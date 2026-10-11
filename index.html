@@ -35,6 +35,7 @@
   --butter:rgba(255,199,102,.14); --butter-ink:#FFC766;
   --peach:rgba(130,149,107,.22); --peach-ink:#A9BC93; /* lighter Secondary for small-text contrast */
   --lav:rgba(185,246,106,.12); --lav-ink:#B9F66A;
+  --edge:#3a4130; --rose-edge:#4f2420; --crit-top:#2e2409; --crit-edge:#4a3a12;
   color-scheme:dark;
 }
 *{box-sizing:border-box}
@@ -77,11 +78,11 @@ main{max-width:560px;margin:0 auto}
 .b-elec{background:var(--raise);color:var(--ink);border-color:var(--line)}
 .b-salt{background:var(--raise);color:var(--ink);border-color:var(--line)}
 .b-stop{background:var(--raise);color:var(--ink);border-color:var(--line)}
-.b-gi{background:var(--rose);color:var(--rose-ink);border-color:#4f2420}
+.b-gi{background:var(--rose);color:var(--rose-ink);border-color:var(--rose-edge)}
 .b-food{background:var(--raise);color:var(--ink);border-color:var(--line)}
 .b-undo{background:transparent;color:var(--muted);border-color:var(--line)}
-.b-reset{background:transparent;color:var(--late);border-color:#4f2420}
-input[type=time]{font:inherit;font-size:18px;font-variant-numeric:tabular-nums;color:var(--ink);background:var(--bg);border:1px solid #3a4130;border-radius:12px;padding:12px 14px;min-width:150px;color-scheme:dark}
+.b-reset{background:transparent;color:var(--late);border-color:var(--rose-edge)}
+input[type=time]{font:inherit;font-size:18px;font-variant-numeric:tabular-nums;color:var(--ink);background:var(--bg);border:1px solid var(--edge);border-radius:12px;padding:12px 14px;min-width:150px;color-scheme:dark}
 input[type=time]:focus,select:focus{outline:2px solid var(--lime);outline-offset:2px}
 label{display:flex;flex-direction:column;gap:6px;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;margin-top:14px;font-weight:600}
 .alert{border-radius:12px;padding:12px 14px;margin-top:12px;background:var(--butter);color:var(--ink);font-size:13px;border-left:3px solid var(--amber)}
@@ -92,7 +93,7 @@ label{display:flex;flex-direction:column;gap:6px;font-size:11px;color:var(--mute
 .pill.none{background:var(--raise);color:var(--muted);border:1px solid var(--line)}
 .tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;border-radius:4px;padding:3px 7px;margin-left:8px;background:var(--butter);color:var(--butter-ink);vertical-align:middle}
 .cp{background:var(--card);border:1px solid var(--line);border-radius:16px;margin-top:10px;overflow:hidden}
-.cp.crit{border-color:#4a3a12;background:linear-gradient(160deg,#2e2409,#12140f 70%)}
+.cp.crit{border-color:var(--crit-edge);background:linear-gradient(160deg,var(--crit-top),#12140f 70%)}
 details summary{list-style:none;cursor:pointer;padding:16px 18px;display:flex;justify-content:space-between;gap:10px;align-items:center}
 details summary::-webkit-details-marker{display:none}
 details[open] summary{border-bottom:1px solid var(--line)}
@@ -136,14 +137,14 @@ tr.crit td{background:var(--butter)}
 .ic{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .btn.small .ic{width:16px;height:16px}
 .night-btn{display:block;margin:12px 0 0 auto;min-height:40px;padding:0 12px;border-radius:12px;border:1px solid var(--line);background:var(--raise);color:var(--ink);font:700 11px Inter,system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
-.night-btn[aria-pressed="true"]{background:#3a0f0c;color:#ff8a72;border-color:#6a1d17}
+.night-btn[aria-pressed="true"]{background:#3a0f0c;color:#ff8a72;border-color:var(--rose-edge)}
 .night-btn:focus-visible,.btn:focus-visible{outline:2px solid var(--lime);outline-offset:2px}
-body.night{--bg:#000;--card:#120404;--raise:#1d0706;--line:#3a1412;--ink:#ff9d8f;--muted:#c2574c;--dim:#8a3d36;--lime:#ff6a52;--on-lime:#000;--sec:#a44b40;--teal:#ff8a72;--ok:#ff8a72;--amber:#ff9d52;--late:#ff6a52;--info:#ff8a72;--mint:rgba(255,138,114,.14);--mint-ink:#ff8a72;--rose:rgba(255,106,82,.18);--rose-ink:#ff6a52;--sky:rgba(255,138,114,.14);--sky-ink:#ff8a72;--butter:rgba(255,106,82,.14);--butter-ink:#ff9d52;--peach:rgba(164,75,64,.25);--peach-ink:#ff9d8f;--lav:rgba(255,106,82,.12);--lav-ink:#ff6a52}
+body.night{--edge:#3a1412; --rose-edge:#6a1d17; --crit-top:#1a0504; --crit-edge:#3a1412; --bg:#000;--card:#120404;--raise:#1d0706;--line:#3a1412;--ink:#ff9d8f;--muted:#c2574c;--dim:#8a3d36;--lime:#ff6a52;--on-lime:#000;--sec:#a44b40;--teal:#ff8a72;--ok:#ff8a72;--amber:#ff9d52;--late:#ff6a52;--info:#ff8a72;--mint:rgba(255,138,114,.14);--mint-ink:#ff8a72;--rose:rgba(255,106,82,.18);--rose-ink:#ff6a52;--sky:rgba(255,138,114,.14);--sky-ink:#ff8a72;--butter:rgba(255,106,82,.14);--butter-ink:#ff9d52;--peach:rgba(164,75,64,.25);--peach-ink:#ff9d8f;--lav:rgba(255,106,82,.12);--lav-ink:#ff6a52}
 body.night .tabbar{background:rgba(0,0,0,.96)}
-body.night .cp.crit{border-color:#3a1412;background:linear-gradient(160deg,#1a0504,#000 70%)}
+body.night .cp.crit{border-color:var(--edge);background:linear-gradient(160deg,#1a0504,#000 70%)}
 body.night .alert{border-left-color:#ff6a52}
 body.night .alert strong{color:#ff6a52}
-body.night input[type=time]{border-color:#3a1412}
+body.night input[type=time]{border-color:var(--edge)}
 .lastin{margin-top:16px;padding:12px 14px;border:1px solid var(--line);border-left:3px solid var(--lime);border-radius:12px;background:var(--raise)}
 .duegrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .due{background:var(--raise);border:1px solid var(--line);border-radius:12px;padding:14px 14px 12px}
@@ -151,6 +152,7 @@ body.night input[type=time]{border-color:#3a1412}
 .due.now.gel{background:var(--lime);border-color:var(--lime)}
 .due.now.salt{background:var(--amber);border-color:var(--amber)}
 .due.now .label,.due.now .muted,.due.now .due-val{color:var(--on-lime)}
+.ver{color:var(--dim);font-size:11px;text-align:center;letter-spacing:.06em;margin:24px 0 8px}
 </style>
 </head><body>
 
@@ -177,14 +179,14 @@ body.night input[type=time]{border-color:#3a1412}
       <div class="muted tabnum" id="n-clock" style="margin-top:8px"></div>
     </div>
     <div class="card" id="n-next"></div>
-    <div class="card" id="n-finish"></div>
-    <div class="card" id="n-due"></div>
     <div class="btns">
       <button class="btn b-gel" data-fuel="gel"><svg class="ic" aria-hidden="true"><use href="#i-gel"/></svg>+ Gel</button>
       <button class="btn b-salt" data-fuel="saltstick"><svg class="ic" aria-hidden="true"><use href="#i-tab"/></svg>+ Salt Stick</button>
       <button class="btn b-stop wide" data-stop="5"><svg class="ic" aria-hidden="true"><use href="#i-clock"/></svg>+ Stop 5 min</button>
       <button class="btn b-gi wide" data-stop="gi"><svg class="ic" aria-hidden="true"><use href="#i-warn"/></svg>+ Tummy trouble (5 min)</button>
     </div>
+    <div class="card" id="n-due"></div>
+    <div class="card" id="n-finish"></div>
     <div id="n-alerts"></div>
   </section>
 
@@ -200,7 +202,7 @@ body.night input[type=time]{border-color:#3a1412}
         <summary><span class="name" style="font-size:20px">Pace zones</span><span class="muted">tap</span></summary>
         <div class="body">
           <label style="margin-top:0">Target
-            <select id="pace-base" style="font:inherit;color:var(--ink);background:var(--bg);border:1px solid #3a4130;border-radius:12px;padding:10px">
+            <select id="pace-base" style="font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--edge);border-radius:12px;padding:10px">
               <option value="1">15 h plan</option>
               <option value="1.189">Calibrated: 17.8 h</option>
             </select>
@@ -246,6 +248,7 @@ body.night input[type=time]{border-color:#3a1412}
       </div>
     </div>
     <div class="card">
+      <button class="btn small b-food" id="export" style="width:100%;margin-bottom:10px">Export CSV (checkpoints, fuel, stops)</button>
       <button class="btn small b-reset" id="reset" style="width:100%">Clear all data (arrivals, fuel, stops)</button>
       <p class="note">Everything is saved in this browser only. Clear test entries before 7 Nov.</p>
     </div>
@@ -253,6 +256,12 @@ body.night input[type=time]{border-color:#3a1412}
 
   <!-- RULES -->
   <section id="scr-rules" class="screen rules">
+    <div class="card"><h3>Medical and emergency</h3>
+      <p class="muted">Not medical advice. Items marked Proposal need sign-off from coach and medical before race day.</p>
+      <ul><li>Race medical contact: [add from race information]</li>
+          <li>Emergency number: [add from race information]</li>
+          <li>Personal medical notes: [add before race day]</li></ul>
+    </div>
     <div class="card">
       <h3 class="disp">Keep going or drop?</h3>
       <p class="note">Nayla Aprilia Latukau is self-supported: no crew to bring food or pick her up mid-course. Medical is only at Start, WS6 Jemplang, and Finish. The stretch from WS6 to Finish is 25.5 km with no medical point. Thresholds are proposals to confirm with her coach and the event medical team.</p>
@@ -276,6 +285,7 @@ body.night input[type=time]{border-color:#3a1412}
           <li>Planned stops are 57 min. If moving pace matches BTR 2026, a 15 h finish allows about 2 h 14 min of total stops. Log every unplanned stop.</li></ul>
     </div>
   </section>
+  <div class="ver" id="ver">BTS 70K Race Board · v25</div>
 </main>
 
 <nav class="tabbar">
@@ -320,8 +330,16 @@ const SEG_INFO = [
   { cue:'Downhill toward Bromo: light jog, RPE 4–5.', gain:367, loss:538 },
   { cue:'Two uphills and sand. RPE 5–6. Power-hike the climbs, run only the firm sand.', gain:497, loss:471 },
 ];
+const CONFIG = {
+  version: 'v25',
+  raceName: 'BTS 70K',
+  raceDate: '2026-11-07',
+  tz: 'Asia/Jakarta',
+  tzLabel: 'WIB',
+  fuel: { gel: { every: 60, kcal: 100, carbG: null }, saltstick: { every: 60, sodiumMg: null } }
+};
 const PLAN_KCAL = [240,733,388,493,668,605,530];
-const KCAL = { gel:100, saltstick:0, food:200 };
+const KCAL = { gel:CONFIG.fuel.gel.kcal, saltstick:0, food:200 };
 
 function load(key, fb){ try { const v = JSON.parse(localStorage.getItem(key)); return v ?? fb; } catch(e) { return fb; } }
 function save(key, val){ try { localStorage.setItem(key, JSON.stringify(val)); } catch(e) {} }
@@ -338,8 +356,8 @@ function parseActual(s, base){ if(!s) return null; const [h,m]=s.split(':').map(
 function fmtDelta(d){ const a=Math.abs(Math.round(d)); const hh=Math.floor(a/60), mm=a%60; return (hh?hh+'h ':'')+mm+'m'; }
 function hm(mins){ const a=Math.max(0,Math.round(mins)); return Math.floor(a/60)+':'+pad(a%60); }
 function pace(x){ let m=Math.floor(x), s=Math.round((x-m)*60); if(s===60){ m++; s=0; } return m+':'+pad(s); }
-function nowElapsed(base){ const d=new Date(); const w=new Date(d.toLocaleString('en-US',{timeZone:'Asia/Jakarta'})); let t=w.getHours()*60+w.getMinutes(); if(t<base) t+=1440; return t-base; }
-function isRaceDay(){ return new Date().toLocaleDateString('en-CA',{timeZone:'Asia/Jakarta'})==='2026-11-07'; }
+function nowElapsed(base){ const d=new Date(); const w=new Date(d.toLocaleString('en-US',{timeZone:CONFIG.tz})); let t=w.getHours()*60+w.getMinutes(); if(t<base) t+=1440; return t-base; }
+function isRaceDay(){ return new Date().toLocaleDateString('en-CA',{timeZone:CONFIG.tz})===CONFIG.raceDate; }
 function stopsAfter(elMin){ return STOPS.filter(s=>s.el>=elMin).reduce((a,s)=>a+s.min,0); }
 function seg(j){ const prevKm = j>0?CPS[j-1].km:0; const prevEl = j>0?CPS[j-1].el+CPS[j-1].stop:0; return { mv: CPS[j].el-prevEl, dist: CPS[j].km-prevKm }; }
 function showTab(name){
@@ -366,7 +384,14 @@ function state(){
   }
   const projected = lastIdx>=0 ? actual[lastIdx]+(900-CPS[lastIdx].el)+stopsAfter(actual[lastIdx]) : null;
   const plannedKcal = lastIdx>=0 ? PLAN_KCAL.slice(0,lastIdx+1).reduce((a,b)=>a+b,0) : null;
-  return {base,actual,lastIdx,nextIdx,k,depart,stopsRem,mvRem,moveBudget,planFromHere,verdict,cls,projected,plannedKcal};
+  let prevIdx=-1; for(let i=lastIdx-1;i>=0;i--){ if(actual[i]!==null){ prevIdx=i; break; } }
+  let recentProj=null, recentRate=null;
+  if(lastIdx>=0 && prevIdx>=0 && lastIdx<CPS.length-1){
+    const dkm = CPS[lastIdx].km-CPS[prevIdx].km;
+    recentRate = (actual[lastIdx]-actual[prevIdx])/dkm;
+    recentProj = actual[lastIdx] + (CPS[CPS.length-1].km-CPS[lastIdx].km)*recentRate + stopsAfter(actual[lastIdx]);
+  }
+  return {base,actual,lastIdx,nextIdx,k,depart,stopsRem,mvRem,moveBudget,planFromHere,verdict,cls,projected,plannedKcal,recentProj,recentRate};
 }
 
 function lastOf(list, type){ const f=list.filter(x=>x.type===type); return f.length?f[f.length-1].el:null; }
@@ -408,15 +433,22 @@ function renderNow(s){
       <div class="big tabnum ${tier[0]}" style="margin-top:8px">${clock(p,base)}</div>
       <p class="${tier[0]}" style="margin:10px 0 0;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.04em">${tier[1]}</p>
       <div class="row"><div><div class="label">Cut-off buffer</div><div class="mid tabnum ${p<=CUTOFF?'ok':'late'}" style="margin-top:6px">${margin}</div></div></div>
+      ${s.recentProj!==null?`<div class="row"><div><div class="label">At recent pace</div><div class="mid tabnum" style="margin-top:6px">${clock(Math.round(s.recentProj),base)}</div><div class="muted tabnum">last 2 aid stations · ${pace(s.recentRate)}/km incl. stops (estimate)</div></div></div>`:''}
       ${s.verdict?`<p class="${s.cls}" style="font-weight:600;margin:14px 0 0;font-size:13px">${s.verdict}</p>`:''}`;
   }
-  const gl=lastOf(FUEL,'gel'), sl=lastOf(FUEL,'saltstick');
-  const gelDue = gl===null ? 'NOW' : clock(gl+60, base);
-  const saltDue = sl===null ? 'NOW' : clock(sl+60, base);
-  const dueCard=(name,val,kind)=>`<div class="due ${kind}${val==='NOW'?' now':''}"><div class="label">${name}</div><div class="due-val tabnum">${val}</div><div class="muted">every 60 min</div></div>`;
-  $('n-due').innerHTML = `<div class="duegrid">${dueCard('Next gel',gelDue,'gel')}${dueCard('Next Salt Stick',saltDue,'salt')}</div>`;
+  const nowEl = nowElapsed(base);
+  const dueInfo = (list, kind, ev) => {
+    const last = lastOf(list, kind);
+    if(last===null) return { val:'NOW', sub:'every '+ev+' min' };
+    const due = last+ev;
+    if(nowEl>=due) return { val:'NOW', sub: (nowEl-due>=1 ? fmtDelta(nowEl-due)+' overdue' : 'due now') };
+    return { val: clock(due, base), sub: 'every '+ev+' min' };
+  };
+  const dueCard=(name,info,kind)=>`<div class="due ${kind}${info.val==='NOW'?' now':''}"><div class="label">${name}</div><div class="due-val tabnum">${info.val}</div><div class="muted">${info.sub}</div></div>`;
+  $('n-due').innerHTML = `<div class="duegrid">${dueCard('Next gel',dueInfo(FUEL,'gel',CONFIG.fuel.gel.every),'gel')}${dueCard('Next Salt Stick',dueInfo(FUEL,'saltstick',CONFIG.fuel.saltstick.every),'salt')}</div>`;
   const alerts=[];
   if(s.projected!==null && s.projected>CUTOFF) alerts.push('<strong>Cut-off risk.</strong> Finish ETA is after 19:00 WIB at current pace.');
+  if(s.recentProj!==null && s.recentProj>CUTOFF) alerts.push('<strong>Cut-off risk at recent pace.</strong> The last two aid stations project past 19:00 WIB.');
   const unplanned = STOPS.reduce((a,x)=>a+x.min,0);
   if(unplanned>30) alerts.push(`<strong>Unplanned stops ${unplanned} min.</strong> The 15 h target now needs faster moving. Keep stops to the minimum.`);
   const intake = FUEL.reduce((a,f)=>a+(KCAL[f.type]||0),0);
@@ -480,6 +512,10 @@ function renderLog(s){
     `<div class="stat"><div class="k">Fuel logged</div><div class="v tabnum">${logged} kcal</div><div class="s">${cnt('gel')} gels · ${cnt('saltstick')} Salt Stick</div></div>`,
     `<div class="stat"><div class="k">Plan at last aid station</div><div class="v tabnum">${s.plannedKcal===null?'—':s.plannedKcal+' kcal'}</div><div class="s">${s.plannedKcal===null?'Check in at an aid station first':'Difference '+(logged-s.plannedKcal>=0?'+':'')+(logged-s.plannedKcal)+' kcal'}</div></div>`
   ].join('');
+  if(CONFIG.fuel.gel.carbG!==null){
+    const carbs=cnt('gel')*CONFIG.fuel.gel.carbG, hrs=nowElapsed(s.base)/60;
+    $('l-fuel').innerHTML += `<div class="stat"><div class="k">Carbs from gels</div><div class="v tabnum">${carbs} g</div><div class="s">${hrs>0?(carbs/hrs).toFixed(0)+' g/h so far':'Start the clock to see g/h'}</div></div>`;
+  }
   $('l-fuel-note').textContent = 'Carry from the start: about 15 gels (hourly) and about 15 Salt Stick doses (hourly), and 2 solid snacks for the 12.5 km gap (WS6 to WS14) and the final 13 km.';
   const unplanned = STOPS.reduce((a,x)=>a+x.min,0), gi = STOPS.filter(x=>x.gi).length;
   const plannedLeft = s.lastIdx>=0 ? CPS.slice(s.lastIdx+1).reduce((a,c)=>a+c.stop,0) : CPS.reduce((a,c)=>a+c.stop,0);
@@ -526,10 +562,26 @@ function applyNight(on){ document.body.classList.toggle('night',on); if(nightBtn
 let nightOn=false; try{ nightOn=localStorage.getItem('bts70k-night')==='1'; }catch(e){}
 applyNight(nightOn);
 if(nightBtn) nightBtn.addEventListener('click',()=>{ const on=!document.body.classList.contains('night'); applyNight(on); try{ localStorage.setItem('bts70k-night',on?'1':'0'); }catch(e){} });
+function exportCSV(){
+  const base=startMin();
+  const rows=[['section','name','km','plan_clock','actual_elapsed_min','actual_clock','delta_min','type_or_min','gi']];
+  CPS.forEach(c=>{ const a=ACT[c.id]||''; const ae=parseActual(a,base);
+    rows.push(['checkpoint',c.name,c.km,clock(c.el,base),ae===null?'':ae,a,ae===null?'':Math.round(ae-c.el),'','']); });
+  FUEL.forEach(f=>rows.push(['fuel','','',clock(f.el,base),Math.round(f.el),clock(f.el,base),'',f.type,'']));
+  STOPS.forEach(x=>rows.push(['stop','','',clock(x.el,base),Math.round(x.el),clock(x.el,base),'',x.min,x.gi?'yes':'']));
+  const csv=rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');
+  try{
+    const url=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+    const a=document.createElement('a'); a.href=url; a.download='bts70k-'+CONFIG.raceDate+'.csv';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),1000);
+  }catch(err){ alert('Export is not available in this browser.'); }
+}
 document.addEventListener('click', e=>{
-  const b=e.target.closest('[data-tab],[data-fuel],[data-stop],[data-undo],#reset');
+  const b=e.target.closest('[data-tab],[data-fuel],[data-stop],[data-undo],#reset,#export');
   if(!b) return;
   if(b.dataset.tab){ showTab(b.dataset.tab); return; }
+  if(b.id==='export'){ exportCSV(); return; }
   if(b.dataset.fuel){ logFuel(b.dataset.fuel); return; }
   if(b.dataset.stop){ const gi=b.dataset.stop==='gi'; logStop(gi?5:+b.dataset.stop, gi); return; }
   if(b.dataset.undo==='fuel'){ FUEL.pop(); save(FKEY,FUEL); renderAll(); return; }
