@@ -229,7 +229,6 @@ body.night input[type=time]{border-color:var(--edge)}
   <!-- LOG -->
   <section id="scr-log" class="screen">
     <div class="card"><div class="label key">Share status</div>
-      <p class="muted" style="margin:8px 0 0">Sends her elapsed time, last check-in, next aid station and finish ETA to a contact.</p>
       <button class="btn wide" id="share" style="width:100%;margin-top:12px">Share status</button>
       <textarea id="share-text" hidden readonly rows="7" style="width:100%;margin-top:12px;font:inherit;font-size:13px;color:var(--ink);background:var(--bg);border:1px solid var(--edge);border-radius:12px;padding:12px"></textarea>
     </div>
@@ -246,9 +245,7 @@ body.night input[type=time]{border-color:var(--edge)}
       <h3 class="disp">Fuel</h3>
       <div class="stats" id="l-fuel"></div>
       <div class="btns">
-        <button class="btn small b-gel" data-fuel="gel"><svg class="ic" aria-hidden="true"><use href="#i-gel"/></svg>+ Gel</button>
         <button class="btn small b-food" data-fuel="food"><svg class="ic" aria-hidden="true"><use href="#i-food"/></svg>+ Real food</button>
-        <button class="btn small b-salt" data-fuel="saltstick"><svg class="ic" aria-hidden="true"><use href="#i-tab"/></svg>+ Salt Stick</button>
         <button class="btn small b-undo wide" data-undo="fuel">Undo last fuel entry</button>
       </div>
       <p class="note" id="l-fuel-note"></p>
@@ -257,10 +254,8 @@ body.night input[type=time]{border-color:var(--edge)}
       <h3 class="disp">Stops</h3>
       <div class="stats" id="l-stops"></div>
       <div class="btns">
-        <button class="btn small b-stop" data-stop="5"><svg class="ic" aria-hidden="true"><use href="#i-clock"/></svg>+ Stop 5</button>
         <button class="btn small b-stop" data-stop="10"><svg class="ic" aria-hidden="true"><use href="#i-clock"/></svg>+ Stop 10</button>
         <button class="btn small b-stop" data-stop="20"><svg class="ic" aria-hidden="true"><use href="#i-clock"/></svg>+ Stop 20</button>
-        <button class="btn small b-gi" data-stop="gi"><svg class="ic" aria-hidden="true"><use href="#i-warn"/></svg>+ Tummy trouble</button>
         <button class="btn small b-undo wide" data-undo="stop">Undo last stop</button>
       </div>
     </div>
@@ -297,7 +292,7 @@ body.night input[type=time]{border-color:var(--edge)}
           <li>Planned stops are 57 min. If moving pace matches BTR 2026, a 15 h finish allows about 2 h 14 min of total stops. Log every unplanned stop.</li></ul></details>
     </div>
   </section>
-  <div class="ver" id="ver">BTS 70K Companion · v30</div>
+  <div class="ver" id="ver">BTS 70K Companion · v31</div>
 </main>
 
 <nav class="tabbar">
@@ -343,7 +338,7 @@ const SEG_INFO = [
   { cue:'Two uphills and sand. RPE 5–6. Power-hike the climbs, run only the firm sand.', gain:497, loss:471 },
 ];
 const CONFIG = {
-  version: 'v30',
+  version: 'v31',
   raceName: 'BTS 70K',
   athlete: 'Nayla Aprilia Latukau',
   raceDate: '2026-11-07',
@@ -529,30 +524,21 @@ function renderLog(s){
     const a=s.actual[i];
     let status = '<span class="pill none">Not logged</span>';
     if(a!==null){ const d=a-c.el; status = d<=0 ? `<span class="pill ok">${fmtDelta(d)} ahead</span>` : `<span class="pill late">${fmtDelta(d)} behind</span>`; }
-    return `<div class="row" style="align-items:center;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)">
+    return `<div class="row" style="align-items:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--line)">
       <div style="flex:1;min-width:140px"><div class="name" style="font-size:18px">${c.name}</div><div class="muted">km ${c.km} · plan ${clock(c.el,s.base)}</div></div>
       <div><input type="time" data-id="${c.id}" value="${ACT[c.id]||''}" aria-label="Actual arrival ${c.name}"><div style="margin-top:6px">${status}</div></div>
     </div>`;
   }).join('');
   const logged = FUEL.reduce((a,f)=>a+(KCAL[f.type]||0),0);
   const cnt = t => FUEL.filter(f=>f.type===t).length;
-  $('l-fuel').innerHTML = [
-    `<div class="stat"><div class="k">Fuel logged</div><div class="v tabnum">${logged} kcal</div><div class="s">${cnt('gel')} gels · ${cnt('saltstick')} Salt Stick</div></div>`,
-    `<div class="stat"><div class="k">Plan at last aid station</div><div class="v tabnum">${s.plannedKcal===null?'—':s.plannedKcal+' kcal'}</div><div class="s">${s.plannedKcal===null?'Check in at an aid station first':'Difference '+(logged-s.plannedKcal>=0?'+':'')+(logged-s.plannedKcal)+' kcal'}</div></div>`
-  ].join('');
+  $('l-fuel').innerHTML = `<p class="muted tabnum" style="margin:0">Logged <b style="color:var(--ink)">${logged} kcal</b> · ${cnt('gel')} gels · ${cnt('saltstick')} Salt Stick · plan ${s.plannedKcal===null?'—':s.plannedKcal+' kcal'}</p>`;
   if(CONFIG.fuel.gel.carbG!==null){
     const carbs=cnt('gel')*CONFIG.fuel.gel.carbG, hrs=nowElapsed(s.base)/60;
-    $('l-fuel').innerHTML += `<div class="stat"><div class="k">Carbs from gels</div><div class="v tabnum">${carbs} g</div><div class="s">${hrs>0?(carbs/hrs).toFixed(0)+' g/h so far':'Start the clock to see g/h'}</div></div>`;
+    $('l-fuel').innerHTML += `<p class="muted tabnum" style="margin:6px 0 0">Carbs from gels <b style="color:var(--ink)">${carbs} g</b>${hrs>0?' · '+(carbs/hrs).toFixed(0)+' g/h':''}</p>`;
   }
   $('l-fuel-note').textContent = 'Carry from the start: about 15 gels (hourly) and about 15 Salt Stick doses (hourly), and 2 solid snacks for the 12.5 km gap (WS6 to WS14) and the final 13 km.';
   const unplanned = STOPS.reduce((a,x)=>a+x.min,0), gi = STOPS.filter(x=>x.gi).length;
-  const plannedLeft = s.lastIdx>=0 ? CPS.slice(s.lastIdx+1).reduce((a,c)=>a+c.stop,0) : CPS.reduce((a,c)=>a+c.stop,0);
-  $('l-stops').innerHTML = [
-    `<div class="stat"><div class="k">Unplanned stops</div><div class="v tabnum ${unplanned>30?'late':'ok'}">${unplanned} min</div><div class="s">${STOPS.length} logged</div></div>`,
-    `<div class="stat"><div class="k">Tummy trouble</div><div class="v tabnum ${gi?'late':''}">${gi}</div><div class="s">See gut rules</div></div>`,
-    `<div class="stat"><div class="k">Planned stops left</div><div class="v tabnum">${plannedLeft} min</div><div class="s">From the plan</div></div>`,
-    `<div class="stat"><div class="k">Stop budget for 15 h</div><div class="v tabnum">134 min</div><div class="s">If moving pace matches BTR 2026 (estimate)</div></div>`
-  ].join('');
+  $('l-stops').innerHTML = `<p class="muted tabnum" style="margin:0">Unplanned <b class="${unplanned>30?'late':'ok'}">${unplanned} min</b> · tummy trouble <b class="${gi?'late':''}">${gi}</b> · ${STOPS.length} logged</p>`;
 }
 
 function renderCourse(s){
