@@ -188,6 +188,11 @@ body.night input[type=time]{border-color:var(--edge)}
     <div class="card" id="n-due"></div>
     <div class="card" id="n-finish"></div>
     <div id="n-alerts"></div>
+    <div class="card"><div class="label key">Share status</div>
+      <p class="muted" style="margin:8px 0 0">Sends her elapsed time, last check-in, next aid station and finish ETA to a contact.</p>
+      <button class="btn wide" id="share" style="width:100%;margin-top:12px">Share status</button>
+      <textarea id="share-text" hidden readonly rows="7" style="width:100%;margin-top:12px;font:inherit;font-size:13px;color:var(--ink);background:var(--bg);border:1px solid var(--edge);border-radius:12px;padding:12px"></textarea>
+    </div>
   </section>
 
   <!-- PLAN -->
@@ -285,7 +290,7 @@ body.night input[type=time]{border-color:var(--edge)}
           <li>Planned stops are 57 min. If moving pace matches BTR 2026, a 15 h finish allows about 2 h 14 min of total stops. Log every unplanned stop.</li></ul>
     </div>
   </section>
-  <div class="ver" id="ver">BTS 70K Race Board · v25</div>
+  <div class="ver" id="ver">BTS 70K Race Board · v26</div>
 </main>
 
 <nav class="tabbar">
@@ -331,11 +336,13 @@ const SEG_INFO = [
   { cue:'Two uphills and sand. RPE 5–6. Power-hike the climbs, run only the firm sand.', gain:497, loss:471 },
 ];
 const CONFIG = {
-  version: 'v25',
+  version: 'v26',
   raceName: 'BTS 70K',
+  athlete: 'Nayla Aprilia Latukau',
   raceDate: '2026-11-07',
   tz: 'Asia/Jakarta',
   tzLabel: 'WIB',
+  checkinGraceMin: 30,   // minutes after planned arrival before the app flags a missing check-in (editable)
   fuel: { gel: { every: 60, kcal: 100, carbG: null }, saltstick: { every: 60, sodiumMg: null } }
 };
 const PLAN_KCAL = [240,733,388,493,668,605,530];
@@ -449,6 +456,10 @@ function renderNow(s){
   const alerts=[];
   if(s.projected!==null && s.projected>CUTOFF) alerts.push('<strong>Cut-off risk.</strong> Finish ETA is after 19:00 WIB at current pace.');
   if(s.recentProj!==null && s.recentProj>CUTOFF) alerts.push('<strong>Cut-off risk at recent pace.</strong> The last two aid stations project past 19:00 WIB.');
+  const nowElMin = nowElapsed(base);
+  if(s.nextIdx>=0 && nowElMin > CPS[s.nextIdx].el + CONFIG.checkinGraceMin){
+    alerts.push(`<strong>No check-in yet at ${CPS[s.nextIdx].name}.</strong> Planned ${clock(CPS[s.nextIdx].el,base)} WIB, now ${clock(nowElMin,base)} WIB. Confirm her status.`);
+  }
   const unplanned = STOPS.reduce((a,x)=>a+x.min,0);
   if(unplanned>30) alerts.push(`<strong>Unplanned stops ${unplanned} min.</strong> The 15 h target now needs faster moving. Keep stops to the minimum.`);
   const intake = FUEL.reduce((a,f)=>a+(KCAL[f.type]||0),0);
@@ -577,11 +588,33 @@ function exportCSV(){
     setTimeout(()=>URL.revokeObjectURL(url),1000);
   }catch(err){ alert('Export is not available in this browser.'); }
 }
+function statusText(s){
+  const base=s.base, now=nowElapsed(base);
+  const last = s.lastIdx>=0 ? CPS[s.lastIdx] : null;
+  const next = s.nextIdx>=0 ? CPS[s.nextIdx] : null;
+  const L=[`BTS 70K · ${CONFIG.athlete} · status ${clock(now,base)} ${CONFIG.tzLabel}`, `Elapsed: ${hm(now)} h`];
+  if(last) L.push(`Last check-in: ${last.name} at ${ACT[last.id]||'—'} ${CONFIG.tzLabel}`);
+  if(next) L.push(`Next: ${next.name}, planned ${clock(next.el,base)} ${CONFIG.tzLabel}`);
+  if(s.projected!==null) L.push(`Finish ETA: ${clock(s.projected,base)} ${CONFIG.tzLabel} (cut-off ${clock(CUTOFF,base)})`);
+  if(s.recentProj!==null) L.push(`At recent pace: ${clock(Math.round(s.recentProj),base)} ${CONFIG.tzLabel}`);
+  return L.join('\n');
+}
+async function shareStatus(){
+  const text=statusText(state());
+  if(navigator.share){
+    try{ await navigator.share({title:'BTS 70K status', text}); return; }
+    catch(err){ if(err && err.name==='AbortError') return; }
+  }
+  try{ await navigator.clipboard.writeText(text); alert('Status copied. Paste it into a message.'); return; }
+  catch(err){}
+  const box=$('share-text'); box.value=text; box.hidden=false; box.focus(); box.select();
+}
 document.addEventListener('click', e=>{
-  const b=e.target.closest('[data-tab],[data-fuel],[data-stop],[data-undo],#reset,#export');
+  const b=e.target.closest('[data-tab],[data-fuel],[data-stop],[data-undo],#reset,#export,#share');
   if(!b) return;
   if(b.dataset.tab){ showTab(b.dataset.tab); return; }
   if(b.id==='export'){ exportCSV(); return; }
+  if(b.id==='share'){ shareStatus(); return; }
   if(b.dataset.fuel){ logFuel(b.dataset.fuel); return; }
   if(b.dataset.stop){ const gi=b.dataset.stop==='gi'; logStop(gi?5:+b.dataset.stop, gi); return; }
   if(b.dataset.undo==='fuel'){ FUEL.pop(); save(FKEY,FUEL); renderAll(); return; }
