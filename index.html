@@ -148,7 +148,8 @@ body.night input[type=time]{border-color:#3a1412}
 .duegrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .due{background:var(--raise);border:1px solid var(--line);border-radius:12px;padding:14px 14px 12px}
 .due-val{font-family:"Barlow Condensed",Inter,sans-serif;font-weight:800;font-size:clamp(34px,10vw,44px);line-height:1;margin-top:8px}
-.due.now{background:var(--lime);border-color:var(--lime)}
+.due.now.gel{background:var(--lime);border-color:var(--lime)}
+.due.now.salt{background:var(--amber);border-color:var(--amber)}
 .due.now .label,.due.now .muted,.due.now .due-val{color:var(--on-lime)}
 </style>
 </head><body>
@@ -412,8 +413,8 @@ function renderNow(s){
   const gl=lastOf(FUEL,'gel'), sl=lastOf(FUEL,'saltstick');
   const gelDue = gl===null ? 'NOW' : clock(gl+60, base);
   const saltDue = sl===null ? 'NOW' : clock(sl+60, base);
-  const dueCard=(name,val)=>`<div class="due${val==='NOW'?' now':''}"><div class="label">${name}</div><div class="due-val tabnum">${val}</div><div class="muted">every 60 min</div></div>`;
-  $('n-due').innerHTML = `<div class="duegrid">${dueCard('Next gel',gelDue)}${dueCard('Next Salt Stick',saltDue)}</div>`;
+  const dueCard=(name,val,kind)=>`<div class="due ${kind}${val==='NOW'?' now':''}"><div class="label">${name}</div><div class="due-val tabnum">${val}</div><div class="muted">every 60 min</div></div>`;
+  $('n-due').innerHTML = `<div class="duegrid">${dueCard('Next gel',gelDue,'gel')}${dueCard('Next Salt Stick',saltDue,'salt')}</div>`;
   const alerts=[];
   if(s.projected!==null && s.projected>CUTOFF) alerts.push('<strong>Cut-off risk.</strong> Finish ETA is after 19:00 WIB at current pace.');
   const unplanned = STOPS.reduce((a,x)=>a+x.min,0);
