@@ -136,7 +136,8 @@ tr.crit td{background:var(--butter)}
 
 .ic{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .btn.small .ic{width:16px;height:16px}
-.night-btn{display:block;margin:12px 0 0 auto;min-height:40px;padding:0 12px;border-radius:12px;border:1px solid var(--line);background:var(--raise);color:var(--ink);font:700 11px Inter,system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
+.toprow{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.night-btn{display:block;margin:0;min-height:40px;padding:0 12px;border-radius:12px;border:1px solid var(--line);background:var(--raise);color:var(--ink);font:700 11px Inter,system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
 .night-btn[aria-pressed="true"]{background:#3a0f0c;color:#ff8a72;border-color:var(--rose-edge)}
 .night-btn:focus-visible,.btn:focus-visible{outline:2px solid var(--lime);outline-offset:2px}
 body.night{--edge:#3a1412; --rose-edge:#6a1d17; --crit-top:#1a0504; --crit-edge:#3a1412; --bg:#000;--card:#120404;--raise:#1d0706;--line:#3a1412;--ink:#ff9d8f;--muted:#c2574c;--dim:#8a3d36;--lime:#ff6a52;--on-lime:#000;--sec:#a44b40;--teal:#ff8a72;--ok:#ff8a72;--amber:#ff9d52;--late:#ff6a52;--info:#ff8a72;--mint:rgba(255,138,114,.14);--mint-ink:#ff8a72;--rose:rgba(255,106,82,.18);--rose-ink:#ff6a52;--sky:rgba(255,138,114,.14);--sky-ink:#ff8a72;--butter:rgba(255,106,82,.14);--butter-ink:#ff9d52;--peach:rgba(164,75,64,.25);--peach-ink:#ff9d8f;--lav:rgba(255,106,82,.12);--lav-ink:#ff6a52}
@@ -153,13 +154,22 @@ body.night input[type=time]{border-color:var(--edge)}
 .due.now.salt{background:var(--amber);border-color:var(--amber)}
 .due.now .label,.due.now .muted,.due.now .due-val{color:var(--on-lime)}
 .ver{color:var(--dim);font-size:11px;text-align:center;letter-spacing:.06em;margin:24px 0 8px}
+.btns .btn{min-height:52px}
+.rules details{border-top:1px solid var(--line)}
+.rules details summary{padding:14px 0;font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:13px;color:var(--lime);list-style:none}
+.rules details summary::-webkit-details-marker{display:none}
+.rules details summary::after{content:"+";color:var(--muted);font-size:18px;line-height:1}
+.rules details[open] summary::after{content:"−"}
+.rules details[open] summary{border-bottom:0}
+.rules details ul{margin:0 0 12px}
+[hidden]{display:none !important}
 </style>
 </head><body>
 
 <div class="top">
-  <div class="brand disp"><span style="color:var(--lime)">BTS 70K</span>&nbsp;<span>Race Board</span></div>
-  <div class="sub">Nayla Aprilia Latukau · 7 Nov 2026 · Bromo Tengger Semeru · WIB · Target 15 h · Cut-off 18 h</div>
-  <button id="night" class="night-btn" type="button" aria-pressed="false">Night red: off</button>
+  <div class="toprow"><div class="brand disp"><span style="color:var(--lime)">BTS 70K</span>&nbsp;<span>Race Board</span></div>
+  <button id="night" class="night-btn" type="button" aria-pressed="false">Night off</button></div>
+  <div class="sub">Nayla · 7 Nov · WIB</div>
 </div>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -177,6 +187,7 @@ body.night input[type=time]{border-color:var(--edge)}
       <div class="label">Elapsed Time</div>
       <div class="big tabnum" id="n-elapsed" style="margin-top:6px">—</div>
       <div class="muted tabnum" id="n-clock" style="margin-top:8px"></div>
+      <button class="btn wide" id="startbtn" style="width:100%;margin-top:14px">Start race now</button>
     </div>
     <div class="card" id="n-next"></div>
     <div class="btns">
@@ -188,15 +199,11 @@ body.night input[type=time]{border-color:var(--edge)}
     <div class="card" id="n-due"></div>
     <div class="card" id="n-finish"></div>
     <div id="n-alerts"></div>
-    <div class="card"><div class="label key">Share status</div>
-      <p class="muted" style="margin:8px 0 0">Sends her elapsed time, last check-in, next aid station and finish ETA to a contact.</p>
-      <button class="btn wide" id="share" style="width:100%;margin-top:12px">Share status</button>
-      <textarea id="share-text" hidden readonly rows="7" style="width:100%;margin-top:12px;font:inherit;font-size:13px;color:var(--ink);background:var(--bg);border:1px solid var(--edge);border-radius:12px;padding:12px"></textarea>
-    </div>
   </section>
 
   <!-- PLAN -->
   <section id="scr-plan" class="screen">
+    <p class="muted" style="margin:14px 2px 0">Bromo Tengger Semeru · Target 15 h · Cut-off 18 h · WIB</p>
     <div class="card" id="p-course"></div>
     <div class="card">
       <h3 class="disp">Aid stations</h3>
@@ -221,6 +228,11 @@ body.night input[type=time]{border-color:var(--edge)}
 
   <!-- LOG -->
   <section id="scr-log" class="screen">
+    <div class="card"><div class="label key">Share status</div>
+      <p class="muted" style="margin:8px 0 0">Sends her elapsed time, last check-in, next aid station and finish ETA to a contact.</p>
+      <button class="btn wide" id="share" style="width:100%;margin-top:12px">Share status</button>
+      <textarea id="share-text" hidden readonly rows="7" style="width:100%;margin-top:12px;font:inherit;font-size:13px;color:var(--ink);background:var(--bg);border:1px solid var(--edge);border-radius:12px;padding:12px"></textarea>
+    </div>
     <div class="card">
       <label style="margin-top:0">Race start (WIB)
         <input type="time" id="start" value="01:00">
@@ -270,27 +282,22 @@ body.night input[type=time]{border-color:var(--edge)}
     <div class="card">
       <h3 class="disp">Keep going or drop?</h3>
       <p class="note">Nayla Aprilia Latukau is self-supported: no crew to bring food or pick her up mid-course. Medical is only at Start, WS6 Jemplang, and Finish. The stretch from WS6 to Finish is 25.5 km with no medical point. Thresholds are proposals to confirm with her coach and the event medical team.</p>
-      <h4>Legs</h4>
-      <ul><li>Quad pain 7/10 or higher: walk the next descent and cut pace by 10%.</li>
-          <li>Sharp or one-sided pain, or limping: stop at the next water station and ask for medical.</li></ul>
-      <h4>Gut &amp; fueling</h4>
-      <ul><li>Nausea once: switch to water and electrolyte for 30 minutes, then resume gel.</li>
+      <details><summary>Legs</summary><ul><li>Quad pain 7/10 or higher: walk the next descent and cut pace by 10%.</li>
+          <li>Sharp or one-sided pain, or limping: stop at the next water station and ask for medical.</li></ul></details>
+      <details><summary>Gut &amp; fueling</summary><ul><li>Nausea once: switch to water and Salt Stick for 30 minutes, then resume gel.</li>
           <li>Vomiting, or nausea twice in a row: no gel until it settles; tell medical at the next point.</li>
-          <li>Tummy trouble (diarrhea, nausea, cramps): tap "Tummy trouble" so it is logged. Two or more in one segment: pause gel, use water and electrolyte only, and tell medical at the next point. (Proposal, confirm with coach and medical.)</li>
+          <li>Tummy trouble (diarrhea, nausea, cramps): tap "Tummy trouble" so it is logged. Two or more in one segment: pause gel, use water and Salt Stick only, and tell medical at the next point. (Proposal, confirm with coach and medical.)</li>
           <li>Cannot keep any fluid down for 60 minutes: stop and seek medical help.</li>
-          <li>Bonk (sudden empty tank, shaking, cannot think straight): eat real food and electrolytes now, then walk 5 minutes before moving on.</li></ul>
-      <h4>Heat &amp; cold</h4>
-      <ul><li>Dizziness, confusion, or cramps with heat signs: stop in shade, cool down, and get medical now.</li>
-          <li>Shivering at night: add a layer and eat; if shivering continues or speech slurs, get medical now.</li></ul>
-      <h4>Head game</h4>
-      <ul><li>Wanting to drop: run the 10-minute rule first (eat, drink, walk 5 minutes), then decide.</li>
-          <li>Behind plan by more than 30 minutes at any aid station: re-pace, cut stops to the minimum, and do not chase with surges.</li></ul>
-      <h4>Time &amp; stop budget</h4>
-      <ul><li>Finish ETA after 18:45 WIB: stop and decide whether to continue. Do not push through a cut-off risk.</li>
-          <li>Planned stops are 57 min. If moving pace matches BTR 2026, a 15 h finish allows about 2 h 14 min of total stops. Log every unplanned stop.</li></ul>
+          <li>Bonk (sudden empty tank, shaking, cannot think straight): eat real food and take a Salt Stick now, then walk 5 minutes before moving on.</li></ul></details>
+      <details><summary>Heat &amp; cold</summary><ul><li>Dizziness, confusion, or cramps with heat signs: stop in shade, cool down, and get medical now.</li>
+          <li>Shivering at night: add a layer and eat; if shivering continues or speech slurs, get medical now.</li></ul></details>
+      <details><summary>Head game</summary><ul><li>Wanting to drop: run the 10-minute rule first (eat, drink, walk 5 minutes), then decide.</li>
+          <li>Behind plan by more than 30 minutes at any aid station: re-pace, cut stops to the minimum, and do not chase with surges.</li></ul></details>
+      <details><summary>Time &amp; stop budget</summary><ul><li>Finish ETA after 18:45 WIB: stop and decide whether to continue. Do not push through a cut-off risk.</li>
+          <li>Planned stops are 57 min. If moving pace matches BTR 2026, a 15 h finish allows about 2 h 14 min of total stops. Log every unplanned stop.</li></ul></details>
     </div>
   </section>
-  <div class="ver" id="ver">BTS 70K Race Board · v26</div>
+  <div class="ver" id="ver">BTS 70K Race Board · v28</div>
 </main>
 
 <nav class="tabbar">
@@ -306,7 +313,7 @@ const TARGET = 15 * 60;
 const CPS = [
   { id:'ws1', name:'WS1 B29', note:'Water only', km:5.5, el:97, stop:2, dist:'5.5 km', elev:'+645 m / −380 m', pace:'~17:38/km', crit:false,
     fuel:['Gel every 60 min (~100 kcal)','Salt Stick every 60 min'],
-    grab:['Refill water and electrolyte','Push first 5.5 km to reach B29 before the traffic jam','Body check: breathing, calves, stomach'] },
+    grab:['Refill water','Push first 5.5 km to reach B29 before the traffic jam','Body check: breathing, calves, stomach'] },
   { id:'ws2', name:'WS2 Ranu Pane 1', km:16.5, el:232, stop:15, dist:'11.0 km', elev:'+479 m / −871 m', pace:'~12:05/km', crit:false,
     fuel:['Gel every 60 min','Eat until full: proper meal (~400 kcal)','No gel-driven surges on the long descent'],
     grab:['Eat until full','Body check: feet, blisters, quads, body temperature (cold and wet at night)','Mindset: check mood before the next climb'] },
@@ -321,7 +328,7 @@ const CPS = [
     grab:['Heavy meal: smaller portion first; finish before leaving if nausea allows','Medical and support point on the poster; hand icon is "support"','Carry water for the 12.5 km gap','Mindset: name the mental-wall tactic that worked'] },
   { id:'ws14', name:'WS14 Bromo Sand', km:57, el:758, stop:10, dist:'12.5 km', elev:'+367 m / −538 m', pace:'~9:45/km', crit:false,
     fuel:['Eat a lot: last water station','Gel and Salt Stick every 60 min'],
-    grab:['Eat a lot here; nothing after','Refill water and electrolyte for the final 13 km','Note: short out-and-back spur, about 0.6 km'] },
+    grab:['Eat a lot here; nothing after','Refill water for the final 13 km','Note: short out-and-back spur, about 0.6 km'] },
   { id:'fin', name:'Finish', km:70, el:900, stop:0, dist:'13.0 km (sand)', elev:'+497 m / −471 m', pace:'~10:09/km', crit:false,
     fuel:['Gel every 60 min','Final real food if tolerated','Salt Stick every 60 min'],
     grab:['Two uphills after Bromo: hike steadily, do not spike','Sand section: expect slow running','Mindset: mini-goal every 2 km'] },
@@ -336,7 +343,7 @@ const SEG_INFO = [
   { cue:'Two uphills and sand. RPE 5–6. Power-hike the climbs, run only the firm sand.', gain:497, loss:471 },
 ];
 const CONFIG = {
-  version: 'v26',
+  version: 'v28',
   raceName: 'BTS 70K',
   athlete: 'Nayla Aprilia Latukau',
   raceDate: '2026-11-07',
@@ -363,7 +370,14 @@ function parseActual(s, base){ if(!s) return null; const [h,m]=s.split(':').map(
 function fmtDelta(d){ const a=Math.abs(Math.round(d)); const hh=Math.floor(a/60), mm=a%60; return (hh?hh+'h ':'')+mm+'m'; }
 function hm(mins){ const a=Math.max(0,Math.round(mins)); return Math.floor(a/60)+':'+pad(a%60); }
 function pace(x){ let m=Math.floor(x), s=Math.round((x-m)*60); if(s===60){ m++; s=0; } return m+':'+pad(s); }
-function nowElapsed(base){ const d=new Date(); const w=new Date(d.toLocaleString('en-US',{timeZone:CONFIG.tz})); let t=w.getHours()*60+w.getMinutes(); if(t<base) t+=1440; return t-base; }
+function raceStarted(){ try{ return localStorage.getItem('bts70k-started')==='1'; }catch(e){ return false; } }
+function startRace(){
+  const d=new Date(new Date().toLocaleString('en-US',{timeZone:CONFIG.tz}));
+  $('start').value=pad(d.getHours())+':'+pad(d.getMinutes());
+  try{ localStorage.setItem('bts70k-start',$('start').value); localStorage.setItem('bts70k-started','1'); }catch(e){}
+  renderAll(); tickClock();
+}
+function nowElapsed(base){ if(!raceStarted()) return -1; const d=new Date(); const w=new Date(d.toLocaleString('en-US',{timeZone:CONFIG.tz})); let t=w.getHours()*60+w.getMinutes(); if(t<base) t+=1440; return t-base; }
 function isRaceDay(){ return new Date().toLocaleDateString('en-CA',{timeZone:CONFIG.tz})===CONFIG.raceDate; }
 function stopsAfter(elMin){ return STOPS.filter(s=>s.el>=elMin).reduce((a,s)=>a+s.min,0); }
 function seg(j){ const prevKm = j>0?CPS[j-1].km:0; const prevEl = j>0?CPS[j-1].el+CPS[j-1].stop:0; return { mv: CPS[j].el-prevEl, dist: CPS[j].km-prevKm }; }
@@ -438,9 +452,8 @@ function renderNow(s){
     fc.innerHTML = `
       <div class="label key">Finish ETA</div>
       <div class="big tabnum ${tier[0]}" style="margin-top:8px">${clock(p,base)}</div>
-      <p class="${tier[0]}" style="margin:10px 0 0;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.04em">${tier[1]}</p>
       <div class="row"><div><div class="label">Cut-off buffer</div><div class="mid tabnum ${p<=CUTOFF?'ok':'late'}" style="margin-top:6px">${margin}</div></div></div>
-      ${s.recentProj!==null?`<div class="row"><div><div class="label">At recent pace</div><div class="mid tabnum" style="margin-top:6px">${clock(Math.round(s.recentProj),base)}</div><div class="muted tabnum">last 2 aid stations · ${pace(s.recentRate)}/km incl. stops (estimate)</div></div></div>`:''}
+      ${s.recentProj!==null?`<p class="muted tabnum" style="margin:12px 0 0">At recent pace <b style="color:var(--ink)">${clock(Math.round(s.recentProj),base)}</b> · ${pace(s.recentRate)}/km, last 2 aid stations (estimate)</p>`:''}
       ${s.verdict?`<p class="${s.cls}" style="font-weight:600;margin:14px 0 0;font-size:13px">${s.verdict}</p>`:''}`;
   }
   const nowEl = nowElapsed(base);
@@ -465,7 +478,11 @@ function renderNow(s){
   const intake = FUEL.reduce((a,f)=>a+(KCAL[f.type]||0),0);
   if(s.plannedKcal!==null && intake < s.plannedKcal-100) alerts.push(`<strong>Behind on intake.</strong> Logged ${intake} kcal, plan ${s.plannedKcal} kcal.`);
   if(!isRaceDay()) alerts.push('<strong>Not race day (7 Nov 2026, WIB).</strong> Entries here are tests. Clear them in Log before the race.');
-  $('n-alerts').innerHTML = alerts.map(a=>`<div class="alert">${a}</div>`).join('');
+  const pri = a => a.includes('No check-in') ? 0 : a.includes('Cut-off') ? 1 : a.includes('Unplanned') ? 2 : a.includes('Behind on intake') ? 3 : 4;
+  alerts.sort((x,y)=>pri(x)-pri(y));
+  $('n-alerts').innerHTML = alerts.length
+    ? `<div class="alert">${alerts[0]}</div>${alerts.length>1?`<p class="muted" style="margin:6px 0 0;font-size:12px">+${alerts.length-1} more</p>`:''}`
+    : '';
 }
 
 function renderPlan(s){
@@ -558,18 +575,20 @@ function renderCourse(s){
     <div class="track"><div class="fill" style="width:${pct(lastKm)}"></div>${marks}</div>
     <div class="legend"><span><i style="background:var(--lime)"></i>Covered</span><span><i style="background:var(--teal)"></i>Climb per leg</span></div>`;
 }
+try{ const saved=localStorage.getItem('bts70k-start'); if(saved) $('start').value=saved; }catch(e){}
 function renderAll(){ const s=state(); renderCourse(s); renderNow(s); renderPlan(s); renderLog(s); }
 function tickClock(){
   const base=startMin(), el=nowElapsed(base);
   $('n-elapsed').textContent = el<0 ? 'Not started' : hm(el)+' h';
-  $('n-clock').textContent = el<0 ? 'Race starts at '+$('start').value+' WIB' : 'Clock '+clock(el,base)+' WIB';
+  $('n-clock').textContent = el<0 ? 'Tap Start race when you cross the start line' : 'Clock '+clock(el,base)+' WIB';
+  $('startbtn').hidden = el>=0;
 }
 
-function logFuel(type){ FUEL.push({type, kcal:KCAL[type]||0, el:nowElapsed(startMin())}); save(FKEY,FUEL); renderAll(); tickClock(); }
-function logStop(min, gi){ STOPS.push({min, gi:!!gi, el:nowElapsed(startMin())}); save(SKEY,STOPS); renderAll(); tickClock(); }
+function logFuel(type){ if(!raceStarted()){ alert('Tap Start race first.'); return; } FUEL.push({type, kcal:KCAL[type]||0, el:nowElapsed(startMin())}); save(FKEY,FUEL); renderAll(); tickClock(); }
+function logStop(min, gi){ if(!raceStarted()){ alert('Tap Start race first.'); return; } STOPS.push({min, gi:!!gi, el:nowElapsed(startMin())}); save(SKEY,STOPS); renderAll(); tickClock(); }
 
 const nightBtn=document.getElementById('night');
-function applyNight(on){ document.body.classList.toggle('night',on); if(nightBtn){ nightBtn.setAttribute('aria-pressed',String(on)); nightBtn.textContent='Night red: '+(on?'on':'off'); } }
+function applyNight(on){ document.body.classList.toggle('night',on); if(nightBtn){ nightBtn.setAttribute('aria-pressed',String(on)); nightBtn.textContent='Night '+(on?'on':'off'); } }
 let nightOn=false; try{ nightOn=localStorage.getItem('bts70k-night')==='1'; }catch(e){}
 applyNight(nightOn);
 if(nightBtn) nightBtn.addEventListener('click',()=>{ const on=!document.body.classList.contains('night'); applyNight(on); try{ localStorage.setItem('bts70k-night',on?'1':'0'); }catch(e){} });
@@ -610,11 +629,12 @@ async function shareStatus(){
   const box=$('share-text'); box.value=text; box.hidden=false; box.focus(); box.select();
 }
 document.addEventListener('click', e=>{
-  const b=e.target.closest('[data-tab],[data-fuel],[data-stop],[data-undo],#reset,#export,#share');
+  const b=e.target.closest('[data-tab],[data-fuel],[data-stop],[data-undo],#reset,#export,#share,#startbtn');
   if(!b) return;
   if(b.dataset.tab){ showTab(b.dataset.tab); return; }
   if(b.id==='export'){ exportCSV(); return; }
   if(b.id==='share'){ shareStatus(); return; }
+  if(b.id==='startbtn'){ startRace(); return; }
   if(b.dataset.fuel){ logFuel(b.dataset.fuel); return; }
   if(b.dataset.stop){ const gi=b.dataset.stop==='gi'; logStop(gi?5:+b.dataset.stop, gi); return; }
   if(b.dataset.undo==='fuel'){ FUEL.pop(); save(FKEY,FUEL); renderAll(); return; }
@@ -622,6 +642,7 @@ document.addEventListener('click', e=>{
   if(b.id==='reset'){
     Object.keys(ACT).forEach(k=>delete ACT[k]);
     FUEL=[]; STOPS=[];
+    try{ localStorage.removeItem('bts70k-started'); }catch(e){}
     save(KEY,ACT); save(FKEY,FUEL); save(SKEY,STOPS);
     renderAll(); tickClock();
   }
@@ -632,6 +653,7 @@ document.addEventListener('change', e=>{
     if(t.value) ACT[t.dataset.id]=t.value; else delete ACT[t.dataset.id];
     save(KEY,ACT); renderAll(); tickClock();
   } else if(t.id==='start' || t.id==='pace-base'){
+    if(t.id==='start'){ try{ localStorage.setItem('bts70k-start',t.value); }catch(e){} }
     renderAll(); tickClock();
   }
 });
