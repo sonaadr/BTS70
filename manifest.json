@@ -1,6 +1,6 @@
 {
-  "name": "BTS 70K Race Board",
-  "short_name": "Race Board",
+  "name": "BTS 70K Companion",
+  "short_name": "Companion",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
