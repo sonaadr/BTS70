@@ -175,9 +175,8 @@ body.night input[type=time]{border-color:#3a1412}
     <div class="card" id="n-due"></div>
     <div class="btns">
       <button class="btn b-gel" data-fuel="gel"><svg class="ic" aria-hidden="true"><use href="#i-gel"/></svg>+ Gel</button>
-      <button class="btn b-elec" data-fuel="elec"><svg class="ic" aria-hidden="true"><use href="#i-drop"/></svg>+ Electrolyte</button>
-      <button class="btn b-salt" data-fuel="salt"><svg class="ic" aria-hidden="true"><use href="#i-tab"/></svg>+ Salt cap</button>
-      <button class="btn b-stop" data-stop="5"><svg class="ic" aria-hidden="true"><use href="#i-clock"/></svg>+ Stop 5 min</button>
+      <button class="btn b-salt" data-fuel="saltstick"><svg class="ic" aria-hidden="true"><use href="#i-tab"/></svg>+ Salt Stick</button>
+      <button class="btn b-stop wide" data-stop="5"><svg class="ic" aria-hidden="true"><use href="#i-clock"/></svg>+ Stop 5 min</button>
       <button class="btn b-gi wide" data-stop="gi"><svg class="ic" aria-hidden="true"><use href="#i-warn"/></svg>+ Tummy trouble (5 min)</button>
     </div>
     <div id="n-alerts"></div>
@@ -223,9 +222,8 @@ body.night input[type=time]{border-color:#3a1412}
       <div class="stats" id="l-fuel"></div>
       <div class="btns">
         <button class="btn small b-gel" data-fuel="gel"><svg class="ic" aria-hidden="true"><use href="#i-gel"/></svg>+ Gel</button>
-        <button class="btn small b-elec" data-fuel="elec"><svg class="ic" aria-hidden="true"><use href="#i-drop"/></svg>+ Electrolyte</button>
         <button class="btn small b-food" data-fuel="food"><svg class="ic" aria-hidden="true"><use href="#i-food"/></svg>+ Real food</button>
-        <button class="btn small b-salt" data-fuel="salt"><svg class="ic" aria-hidden="true"><use href="#i-tab"/></svg>+ Salt cap</button>
+        <button class="btn small b-salt" data-fuel="saltstick"><svg class="ic" aria-hidden="true"><use href="#i-tab"/></svg>+ Salt Stick</button>
         <button class="btn small b-undo wide" data-undo="fuel">Undo last fuel entry</button>
       </div>
       <p class="note" id="l-fuel-note"></p>
@@ -286,25 +284,25 @@ const CUTOFF = 18 * 60;
 const TARGET = 15 * 60;
 const CPS = [
   { id:'ws1', name:'WS1 B29', note:'Water only', km:5.5, el:97, stop:2, dist:'5.5 km', elev:'+645 m / −380 m', pace:'~17:38/km', crit:false,
-    fuel:['Gel every 25 min (~100 kcal)','Electrolyte every 30 min'],
+    fuel:['Gel every 60 min (~100 kcal)','Salt Stick every 60 min'],
     grab:['Refill water and electrolyte','Push first 5.5 km to reach B29 before the traffic jam','Body check: breathing, calves, stomach'] },
   { id:'ws2', name:'WS2 Ranu Pane 1', km:16.5, el:232, stop:15, dist:'11.0 km', elev:'+479 m / −871 m', pace:'~12:05/km', crit:false,
-    fuel:['Gel every 25 min','Eat until full: proper meal (~400 kcal)','No gel-driven surges on the long descent'],
+    fuel:['Gel every 60 min','Eat until full: proper meal (~400 kcal)','No gel-driven surges on the long descent'],
     grab:['Eat until full','Body check: feet, blisters, quads, body temperature (cold and wet at night)','Mindset: check mood before the next climb'] },
   { id:'ws3', name:'WS3 Ranu Kumbolo', km:25.5, el:362, stop:5, dist:'9.0 km', elev:'+606 m / −392 m', pace:'~12:46/km', crit:false,
-    fuel:['Gel every 25–30 min','Electrolyte every 30 min','Light items only (~100 kcal)'],
+    fuel:['Gel every 60 min','Salt Stick every 60 min','Light items only (~100 kcal)'],
     grab:['Skip pop mie and heavy food; do not linger','Steady rhythm on the long climb, no sprint','Body check: quads before the steep section, nausea check','Note: short out-and-back spur, about 1 km'] },
   { id:'ws4', name:'WS4 Ranu Pane 2', km:36, el:504, stop:10, dist:'10.5 km', elev:'+606 m / −809 m', pace:'~13:03/km', crit:true, tag:'Quad killer',
-    fuel:['Real-food snack before the descent','Gel and electrolyte every 30 min','No gel-boost sprint'],
+    fuel:['Real-food snack before the descent','Gel and Salt Stick every 60 min','No gel-boost sprint'],
     grab:['Eat real food','Body check: quad check (tired vs sharp pain), heat signs (dizziness, nausea)','Mindset: "Hardest descent is done"'] },
   { id:'ws6', name:'WS6 Jemplang', km:44.5, el:621, stop:15, dist:'8.5 km', elev:'+566 m / −351 m', pace:'~12:35/km', crit:true, tag:'Hard patch',
-    fuel:['Proper meal (~400 kcal, menu TBC)','Gel and electrolyte every 30 min','Energy bar at km 41'],
+    fuel:['Proper meal (~400 kcal, menu TBC)','Gel and Salt Stick every 60 min','Energy bar at km 41'],
     grab:['Heavy meal: smaller portion first; finish before leaving if nausea allows','Medical and support point on the poster; hand icon is "support"','Carry water for the 12.5 km gap','Mindset: name the mental-wall tactic that worked'] },
   { id:'ws14', name:'WS14 Bromo Sand', km:57, el:758, stop:10, dist:'12.5 km', elev:'+367 m / −538 m', pace:'~9:45/km', crit:false,
-    fuel:['Eat a lot: last water station','Gel and electrolyte every 30 min'],
+    fuel:['Eat a lot: last water station','Gel and Salt Stick every 60 min'],
     grab:['Eat a lot here; nothing after','Refill water and electrolyte for the final 13 km','Note: short out-and-back spur, about 0.6 km'] },
   { id:'fin', name:'Finish', km:70, el:900, stop:0, dist:'13.0 km (sand)', elev:'+497 m / −471 m', pace:'~10:09/km', crit:false,
-    fuel:['Gel every 30–40 min','Final real food if tolerated','Electrolyte every 30 min'],
+    fuel:['Gel every 60 min','Final real food if tolerated','Salt Stick every 60 min'],
     grab:['Two uphills after Bromo: hike steadily, do not spike','Sand section: expect slow running','Mindset: mini-goal every 2 km'] },
 ];
 const SEG_INFO = [
@@ -317,7 +315,7 @@ const SEG_INFO = [
   { cue:'Two uphills and sand. RPE 5–6. Power-hike the climbs, run only the firm sand.', gain:497, loss:471 },
 ];
 const PLAN_KCAL = [240,733,388,493,668,605,530];
-const KCAL = { gel:100, elec:0, food:200, salt:0 };
+const KCAL = { gel:100, saltstick:0, food:200 };
 
 function load(key, fb){ try { const v = JSON.parse(localStorage.getItem(key)); return v ?? fb; } catch(e) { return fb; } }
 function save(key, val){ try { localStorage.setItem(key, JSON.stringify(val)); } catch(e) {} }
@@ -406,13 +404,13 @@ function renderNow(s){
       <div class="row"><div><div class="label">Cut-off buffer</div><div class="mid tabnum ${p<=CUTOFF?'ok':'late'}" style="margin-top:6px">${margin}</div></div></div>
       ${s.verdict?`<p class="${s.cls}" style="font-weight:600;margin:14px 0 0;font-size:13px">${s.verdict}</p>`:''}`;
   }
-  const gl=lastOf(FUEL,'gel'), el=lastOf(FUEL,'elec');
-  const gelDue = gl===null ? 'NOW' : clock(gl+25, base);
-  const elecDue = el===null ? 'NOW' : clock(el+30, base);
+  const gl=lastOf(FUEL,'gel'), sl=lastOf(FUEL,'saltstick');
+  const gelDue = gl===null ? 'NOW' : clock(gl+60, base);
+  const saltDue = sl===null ? 'NOW' : clock(sl+60, base);
   $('n-due').innerHTML = `
     <div class="row" style="margin-top:0">
-      <div><div class="label">Next gel</div><div class="mid tabnum" style="margin-top:6px">${gelDue}</div><div class="muted">every 25 min</div></div>
-      <div><div class="label">Next electrolyte</div><div class="mid tabnum" style="margin-top:6px">${elecDue}</div><div class="muted">every 30 min</div></div>
+      <div><div class="label">Next gel</div><div class="mid tabnum" style="margin-top:6px">${gelDue}</div><div class="muted">every 60 min</div></div>
+      <div><div class="label">Next Salt Stick</div><div class="mid tabnum" style="margin-top:6px">${saltDue}</div><div class="muted">every 60 min</div></div>
     </div>`;
   const alerts=[];
   if(s.projected!==null && s.projected>CUTOFF) alerts.push('<strong>Cut-off risk.</strong> Finish ETA is after 19:00 WIB at current pace.');
@@ -476,10 +474,10 @@ function renderLog(s){
   const logged = FUEL.reduce((a,f)=>a+(KCAL[f.type]||0),0);
   const cnt = t => FUEL.filter(f=>f.type===t).length;
   $('l-fuel').innerHTML = [
-    `<div class="stat"><div class="k">Fuel logged</div><div class="v tabnum">${logged} kcal</div><div class="s">${cnt('gel')} gels · ${cnt('elec')} electrolyte · ${cnt('salt')} salt caps</div></div>`,
+    `<div class="stat"><div class="k">Fuel logged</div><div class="v tabnum">${logged} kcal</div><div class="s">${cnt('gel')} gels · ${cnt('saltstick')} Salt Stick</div></div>`,
     `<div class="stat"><div class="k">Plan at last aid station</div><div class="v tabnum">${s.plannedKcal===null?'—':s.plannedKcal+' kcal'}</div><div class="s">${s.plannedKcal===null?'Check in at an aid station first':'Difference '+(logged-s.plannedKcal>=0?'+':'')+(logged-s.plannedKcal)+' kcal'}</div></div>`
   ].join('');
-  $('l-fuel-note').textContent = 'Carry from the start: about 21 gels (plan 2,100 kcal), about 28 electrolyte doses, and 2 solid snacks for the 12.5 km gap (WS6 to WS14) and the final 13 km.';
+  $('l-fuel-note').textContent = 'Carry from the start: about 15 gels (hourly) and about 15 Salt Stick doses (hourly), and 2 solid snacks for the 12.5 km gap (WS6 to WS14) and the final 13 km.';
   const unplanned = STOPS.reduce((a,x)=>a+x.min,0), gi = STOPS.filter(x=>x.gi).length;
   const plannedLeft = s.lastIdx>=0 ? CPS.slice(s.lastIdx+1).reduce((a,c)=>a+c.stop,0) : CPS.reduce((a,c)=>a+c.stop,0);
   $('l-stops').innerHTML = [
